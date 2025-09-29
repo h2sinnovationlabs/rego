@@ -1,34 +1,84 @@
 package com.example.nativeandroidbasearchitecture.ui.theme
 
-import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import com.example.nativeandroidbasearchitecture.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+/**
+ *
+ * Thin	Thin Italic	100
+ * Extra Light	Extra Light Italic	200
+ * Light	Light Italic	300
+ * Regular	Italic	400
+ * Medium	Medium Italic	500
+ * Semi Bold	Semi Bold Italic	600
+ * Bold	Bold Italic	700
+ * Extra Bold	Extra Bold Italic	800
+ * Black	Black Italic	900
+ *
+ */
+
+@Composable
+fun fontLight() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_light,
+        )
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+)
+
+@Composable
+fun fontExtraLight() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_extra_light,
+        )
+    ),
+)
+
+@Composable
+fun fontMedium() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_medium,
+        )
+    ),
+)
+
+@Composable
+fun fontRegular() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_regular,
+        )
+    ),
+)
+
+@Composable
+fun fontSemiBold() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_medium,
+        )
+    ),
+)
+
+@Composable
+fun fontBold() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_bold,
+        )
+    ),
+)
+
+@Composable
+fun fontExtraBold() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.poppins_extra_bold,
+        )
+    ),
 )
