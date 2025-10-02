@@ -1,4 +1,4 @@
-package io.fashinzer.base
+package com.example.nativeandroidbasearchitecture.screens.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

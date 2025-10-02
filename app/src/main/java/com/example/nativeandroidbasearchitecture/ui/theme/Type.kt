@@ -21,7 +21,7 @@ import com.example.nativeandroidbasearchitecture.R
  */
 
 @Composable
-fun fontLight() = TextStyle(
+fun fontLightPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_light,
@@ -30,7 +30,7 @@ fun fontLight() = TextStyle(
 )
 
 @Composable
-fun fontExtraLight() = TextStyle(
+fun fontExtraLightPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_extra_light,
@@ -39,7 +39,7 @@ fun fontExtraLight() = TextStyle(
 )
 
 @Composable
-fun fontMedium() = TextStyle(
+fun fontMediumPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_medium,
@@ -48,7 +48,7 @@ fun fontMedium() = TextStyle(
 )
 
 @Composable
-fun fontRegular() = TextStyle(
+fun fontRegularPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_regular,
@@ -57,16 +57,16 @@ fun fontRegular() = TextStyle(
 )
 
 @Composable
-fun fontSemiBold() = TextStyle(
+fun fontSemiBoldPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
-            resId = R.font.poppins_medium,
+            resId = R.font.poppins_semibold,
         )
     ),
 )
 
 @Composable
-fun fontBold() = TextStyle(
+fun fontBoldPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_bold,
@@ -75,10 +75,73 @@ fun fontBold() = TextStyle(
 )
 
 @Composable
-fun fontExtraBold() = TextStyle(
+fun fontExtraBoldPoppins() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.poppins_extra_bold,
+        )
+    ),
+)
+
+@Composable
+fun fontLightMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_light,
+        )
+    ),
+)
+
+@Composable
+fun fontExtraLightMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_extra_light,
+        )
+    ),
+)
+
+@Composable
+fun fontMediumMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_medium,
+        )
+    ),
+)
+
+@Composable
+fun fontRegularMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_regular,
+        )
+    ),
+)
+
+@Composable
+fun fontSemiBoldMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_semi_bold,
+        )
+    ),
+)
+
+@Composable
+fun fontBoldMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_bold,
+        )
+    ),
+)
+
+@Composable
+fun fontExtraBoldMontserrat() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_extra_bold,
         )
     ),
 )
