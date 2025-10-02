@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsParentScreen
 import com.example.nativeandroidbasearchitecture.screens.loginoption.LoginOptionScreen
-import com.example.nativeandroidbasearchitecture.screens.main.HomeScreen
+import com.example.nativeandroidbasearchitecture.screens.main.home.HomeScreen
 import com.example.nativeandroidbasearchitecture.screens.main.ProfileScreen
 import com.example.nativeandroidbasearchitecture.screens.mobileverification.MobileVerificationScreen
 import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationScreen
@@ -65,7 +65,9 @@ fun AppNavHost() {
         composable(Destinations.Home.route) {
             HomeScreen(
                 onProfileClick = {
-
+                    if (navController.currentDestination?.route != Destinations.Profile.route) {
+                        navController.navigate(Destinations.Profile.route)
+                    }
                 },
                 onRaiseRequest = {
                     navController.navigate(Destinations.RaiseRequest.route)
@@ -129,6 +131,11 @@ fun AppNavHost() {
                 },
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onHomeClick = {
+                    if (navController.currentDestination?.route == Destinations.Profile.route) {
+                        navController.popBackStack()
+                    }
                 }
             )
         }
