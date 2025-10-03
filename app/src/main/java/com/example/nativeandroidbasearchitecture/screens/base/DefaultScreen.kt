@@ -1,10 +1,9 @@
 package com.example.nativeandroidbasearchitecture.screens.base
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,12 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.nativeandroidbasearchitecture.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -45,7 +40,7 @@ fun DefaultScreenUI(
     onRefresh: () -> Unit = {},
     isBackButtonEnabled: Boolean = false,
     onBackButtonClicked: () -> Unit = {},
-    content: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
 
     val refreshState = rememberPullToRefreshState()
@@ -58,13 +53,7 @@ fun DefaultScreenUI(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(1f)
-            .background(Color.White),
-        topBar = {
-
-        },
-        bottomBar = {
-
-        }
+            .background(Color.White)
     ) {
         Box(
             modifier = Modifier
@@ -81,38 +70,10 @@ fun DefaultScreenUI(
                 .background(Color.Transparent)
         ) {
             Column(
-                modifier = Modifier
-                    .padding(
-                        top = if (addToolBarPadding) {
-                            it.calculateTopPadding()
-                        } else {
-                            0.dp
-                        },
-                        bottom = if (!isBottomBarInScreen) {
-                            it.calculateBottomPadding()
-                        } else {
-                            0.dp
-                        },
-                    )
-                    .background(Color.Transparent),
+                modifier = Modifier.background(Color.Transparent),
             ) {
-                if (isBackButtonEnabled) {
-                    Box(modifier = Modifier.padding(start = 16.dp)) {
-                        Image(
-                            modifier = Modifier
-                                .rotate(180f)
-                                .clickable {
-                                    onBackButtonClicked.invoke()
-                                }
-                                .padding(5.dp),
-                            painter = painterResource(R.drawable.ic_arrow),
-                            contentDescription = "Back",
-                            colorFilter = ColorFilter.tint(Color.Black)
-                        )
-                    }
-                }
                 if (networkState == NetworkState.Good) {
-                    content()
+                    content(it)
                 }
             }
 
