@@ -1,7 +1,6 @@
 package com.example.nativeandroidbasearchitecture.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,7 +14,7 @@ import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetai
 import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderListScreen
 import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestParentScreen
 import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordParentScreen
-import kotlinx.coroutines.delay
+import com.example.nativeandroidbasearchitecture.screens.splash.SplashScreen
 
 @Composable
 fun AppNavHost() {
@@ -23,10 +22,8 @@ fun AppNavHost() {
 
     NavHost(navController = navController, startDestination = Destinations.Splash.route) {
         composable(Destinations.Splash.route) {
-            // Splash should show once and auto navigate after 2s
-            LaunchedEffect(Unit) {
-                delay(2000)
-                navController.navigate(Destinations.Home.route) {
+            SplashScreen {
+                navController.navigate(Destinations.LoginOptions.route) {
                     popUpTo(Destinations.Splash.route) { inclusive = true }
                 }
             }
