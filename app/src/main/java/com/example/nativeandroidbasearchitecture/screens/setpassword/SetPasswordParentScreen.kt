@@ -270,6 +270,10 @@ private fun SetPasswordScreen(
     val showError = confirmPassword.isNotEmpty() && password != confirmPassword
     val scrollState = rememberScrollState()
 
+    // Add local state for visibility
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
+
     // Navigate to success page if password was set
     if (passwordSetSuccess) {
         onSuccess()
@@ -302,8 +306,8 @@ private fun SetPasswordScreen(
                 label = "Password",
                 value = password,
                 onValueChange = onPasswordChange,
-                passwordVisible = false,
-                onPasswordVisibilityChange = {},
+                passwordVisible = passwordVisible,
+                onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
                 placeholder = "•••••••••",
                 isError = false
             )
@@ -311,8 +315,8 @@ private fun SetPasswordScreen(
                 label = "Re enter password",
                 value = confirmPassword,
                 onValueChange = onConfirmPasswordChange,
-                passwordVisible = false,
-                onPasswordVisibilityChange = {},
+                passwordVisible = confirmPasswordVisible,
+                onPasswordVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible },
                 placeholder = "•••••••••",
                 isError = showError
             )
