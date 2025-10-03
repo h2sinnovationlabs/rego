@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsParentScreen
 import com.example.nativeandroidbasearchitecture.screens.loginoption.LoginOptionScreen
 import com.example.nativeandroidbasearchitecture.screens.main.home.HomeScreen
-import com.example.nativeandroidbasearchitecture.screens.main.ProfileScreen
+import com.example.nativeandroidbasearchitecture.screens.main.profile.ProfileScreen
 import com.example.nativeandroidbasearchitecture.screens.mobileverification.MobileVerificationScreen
 import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationScreen
 import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsScreen
