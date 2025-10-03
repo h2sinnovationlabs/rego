@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,8 +36,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,6 +70,7 @@ import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
 import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
 import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
 import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumMontserrat
+import org.koin.androidx.compose.koinViewModel
 
 data class PartType(
     val id: String,
@@ -81,46 +83,45 @@ fun RaiseRequestScreen(
     onBack: () -> Unit = {},
     onSubmit: () -> Unit = {}
 ) {
-    Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back),
-                    contentDescription = "Back",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onBack() }
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Raise a Request",
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color1A1A1A_90()
-                )
+    val viewModel: RaiseRequestViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(RaiseRequestEvent.Init)
+    }
+
+    Scaffold { paddingValues ->
+        if (state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading...", color = Color.Gray)
             }
+        } else if (state.error != null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "${'$'}{state.error}", color = Color.Red)
+            }
+        } else {
+            RaiseRequestScreenContent(
+                state = state,
+                onFieldChange = { field, value ->
+                    viewModel.setEvent(RaiseRequestEvent.FieldChanged(field, value))
+                },
+                onSubmit = onSubmit,
+                modifier = Modifier.padding(paddingValues)
+            )
         }
-    ) { paddingValues ->
-        RaiseRequestScreenContent(
-            onSubmit = onSubmit,
-            modifier = Modifier.padding(paddingValues)
-        )
     }
 }
 
 @Composable
 fun RaiseRequestScreenContent(
     modifier: Modifier = Modifier,
+    state: RaiseRequestViewState,
+    onFieldChange: (String, Any) -> Unit,
     onSubmit: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
-    // State variables for all fields
     var carMakeExpanded by remember { mutableStateOf(false) }
     var carModelExpanded by remember { mutableStateOf(false) }
     var fuelTypeExpanded by remember { mutableStateOf(false) }
@@ -128,78 +129,20 @@ fun RaiseRequestScreenContent(
     var dealerLocationExpanded by remember { mutableStateOf(false) }
     var policyTypeExpanded by remember { mutableStateOf(false) }
 
-    var selectedCarMake by remember { mutableStateOf("") }
-    var selectedCarModel by remember { mutableStateOf("") }
-    var selectedFuelType by remember { mutableStateOf("") }
-    var selectedCarVariant by remember { mutableStateOf("") }
-    var selectedDealerLocation by remember { mutableStateOf("") }
-    var selectedPolicyType by remember { mutableStateOf("") }
-
-    var dealerName by remember { mutableStateOf("") }
-    var advisorName by remember { mutableStateOf("") }
-    var advisorContactNumber by remember { mutableStateOf("") }
-    var claimNumber by remember { mutableStateOf("") }
-    var carRegNumber by remember { mutableStateOf("") }
-    var makeYear by remember { mutableStateOf("") }
-
-    var isInventoryPickup by remember { mutableStateOf(false) }
-    var selectedPartType by remember { mutableStateOf("alloy_wheels") }
-
-    // Image picker states
-    val selectedImages = remember { mutableStateListOf<Uri>() }
     var showImagePickerDialog by remember { mutableStateOf(false) }
     var hasPermissions by remember { mutableStateOf(false) }
-    var tempImageUri: Uri? by remember { mutableStateOf(null) }
+    val tempImageUriRemember = remember { mutableStateOf<Uri?>(null) }
 
-    // Image picker launchers
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            println("Gallery image selected: $it")
-            selectedImages.add(it)
-        } ?: println("Gallery selection cancelled")
+    val selectedImages = remember(state.images) {
+        mutableListOf<Uri>().apply { addAll(state.images.mapNotNull { runCatching { Uri.parse(it) }.getOrNull() }) }
     }
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        println("Camera capture result: $success")
-        if (success) {
-            tempImageUri?.let { uri ->
-                println("Adding camera image: $uri")
-                selectedImages.add(uri)
-            } ?: println("Temp image URI is null")
-        }
-    }
-
-    // Permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        println("Permissions result: $permissions")
         hasPermissions = permissions[Manifest.permission.CAMERA] == true
-        println("Camera permission granted: $hasPermissions")
     }
 
-    // Check permissions on launch
-    LaunchedEffect(Unit) {
-        val permissions =
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_MEDIA_IMAGES
-                )
-            } else {
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-            }
-        permissionLauncher.launch(permissions)
-    }
-
-    // Helper function to create temp file for camera
     fun createTempImageUri(context: Context): Uri {
         val imageFileName = "temp_image_${System.currentTimeMillis()}.jpg"
         val storageDir = context.getExternalFilesDir("Pictures") ?: context.filesDir
@@ -212,105 +155,35 @@ fun RaiseRequestScreenContent(
         )
     }
 
-    // Hard coded data
-    val carMakes = listOf("Toyota", "Honda", "Maruti Suzuki", "Hyundai", "Mahindra", "Tata")
-    val carModels = listOf("Camry", "Civic", "Swift", "i20", "XUV700", "Nexon")
-    val fuelTypes = listOf("Petrol", "Diesel", "CNG", "Electric", "Hybrid")
-    val carVariants = listOf("Base", "Mid", "Top", "VXi", "ZXi", "Alpha")
-    val dealerLocations = listOf("Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Pune")
-    val policyTypes =
-        listOf("Comprehensive", "Third Party", "Zero Depreciation", "Return to Invoice")
-
-    // Part types list
-    val partTypes = listOf(
-        PartType(
-            id = "alloy_wheels",
-            title = "Alloy wheels",
-            icon = R.drawable.alloy_wheel
-        ),
-        PartType(
-            id = "headlamps",
-            title = "Headlamps",
-            icon = R.drawable.car_light
-        ),
-        PartType(
-            id = "plastic_repair",
-            title = "Plastic repair",
-            icon = R.drawable.car_seat
-        )
-    )
-
-    @Composable
-    fun LabelWithAsterisk(text: String) {
-        val isRequired = text.endsWith("*")
-        if (!isRequired) {
-            Text(
-                text = text,
-                style = TextStyle(
-                    color = Color1A1A1A_60(),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
-        } else {
-            val label = text.removeSuffix("*")
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = Color1A1A1A_90(), fontSize = 12.sp)) {
-                        append(label)
-                    }
-                    withStyle(SpanStyle(color = Color(0xFFE7503D))) {
-                        append("*")
-                    }
-                }
-            )
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+    ) { uri: Uri? ->
+        uri?.let {
+            val newImages = state.images + it.toString()
+            onFieldChange("images", newImages)
         }
     }
 
-    // Image picker dialog
-    if (showImagePickerDialog) {
-        AlertDialog(
-            onDismissRequest = { showImagePickerDialog = false },
-            title = { Text("Select Image") },
-            text = { Text("Choose an option to add a photo") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showImagePickerDialog = false
-                        if (hasPermissions) {
-                            try {
-                                tempImageUri = createTempImageUri(context)
-                                println("Created temp URI: $tempImageUri")
-                                tempImageUri?.let { uri ->
-                                    cameraLauncher.launch(uri)
-                                } ?: println("Failed to create temp URI")
-                            } catch (e: Exception) {
-                                println("Error creating temp file: ${e.message}")
-                                e.printStackTrace()
-                            }
-                        } else {
-                            println("Camera permission not granted, requesting permission")
-                            permissionLauncher.launch(
-                                arrayOf(Manifest.permission.CAMERA)
-                            )
-                        }
-                    }
-                ) {
-                    Text("Camera")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        galleryLauncher.launch("image/*")
-                        showImagePickerDialog = false
-                    }
-                ) {
-                    Text("Gallery")
-                }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            tempImageUriRemember.value?.let { uri ->
+                val newImages = state.images + uri.toString()
+                onFieldChange("images", newImages)
             }
-        )
+        }
     }
+
+    val opts = state.formOptions ?: RaiseRequestFormOptions(
+        emptyList(),
+        emptyList(),
+        emptyList(),
+        emptyList(),
+        emptyList(),
+        emptyList(),
+        emptyList()
+    )
 
     Column(
         modifier = modifier
@@ -319,7 +192,6 @@ fun RaiseRequestScreenContent(
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(12.dp))
-        // Part type section
         Text(
             text = "Part type",
             fontSize = 16.sp,
@@ -336,23 +208,19 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Part selection - Lazy Row with part types list
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(partTypes) { partType ->
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            items(opts.partTypes) { partType ->
                 PartTypeCard(
                     icon = partType.icon,
                     title = partType.title,
-                    isSelected = selectedPartType == partType.id,
-                    onClick = { selectedPartType = partType.id }
+                    isSelected = state.selectedPartType == partType.id,
+                    onClick = { onFieldChange("selectedPartType", partType.id) }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Part photos section
         Text(
             text = "Part photos",
             fontSize = 16.sp,
@@ -369,11 +237,7 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Photos row with Add Photo and selected photos
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Selected photos
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(selectedImages) { imageUri ->
                 Box {
                     AsyncImage(
@@ -396,31 +260,23 @@ fun RaiseRequestScreenContent(
                             .size(24.dp)
                             .padding(end = 5.dp, top = 5.dp)
                             .clickable {
-                                selectedImages.remove(imageUri)
+                                val newImages = state.images.toMutableList()
+                                    .apply { remove(imageUri.toString()) }
+                                onFieldChange("images", newImages)
                             }
                     )
                 }
             }
-
-            // Add Photo button
             item {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        .border(
-                            width = 1.dp,
-                            color = Color(0xFF4CAF50),
-                            shape = RoundedCornerShape(8.dp)
-                        )
+                        .border(1.dp, Color(0xFF4CAF50), RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp))
-                        .clickable {
-                            showImagePickerDialog = true
-                        },
+                        .clickable { showImagePickerDialog = true },
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(id = R.drawable.camera),
                             contentDescription = "Add Photo",
@@ -428,19 +284,56 @@ fun RaiseRequestScreenContent(
                             modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Add Photo",
-                            fontSize = 10.sp,
-                            color = Color(0xFF4CAF50)
-                        )
+                        Text("Add Photo", fontSize = 10.sp, color = Color(0xFF4CAF50))
                     }
                 }
             }
         }
 
+        if (showImagePickerDialog) {
+            AlertDialog(
+                onDismissRequest = { showImagePickerDialog = false },
+                title = { Text("Select Image") },
+                text = { Text("Choose an option to add a photo") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showImagePickerDialog = false
+                            if (hasPermissions) {
+                                try {
+                                    val uri = createTempImageUri(context)
+                                    tempImageUriRemember.value = uri
+                                    cameraLauncher.launch(uri)
+                                } catch (e: Exception) {
+                                    println("Error creating temp file: ${e.message}")
+                                    e.printStackTrace()
+                                }
+                            } else {
+                                println("Camera permission not granted, requesting permission")
+                                permissionLauncher.launch(
+                                    arrayOf(Manifest.permission.CAMERA)
+                                )
+                            }
+                        }
+                    ) {
+                        Text("Camera")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            galleryLauncher.launch("image/*")
+                            showImagePickerDialog = false
+                        }
+                    ) {
+                        Text("Gallery")
+                    }
+                }
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Other Details section
         Text(
             text = "Other Details",
             fontSize = 16.sp,
@@ -455,14 +348,13 @@ fun RaiseRequestScreenContent(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Car Make Dropdown
         DropdownField(
             label = "",
-            value = selectedCarMake,
-            onValueChange = { selectedCarMake = it },
+            value = state.selectedCarMake,
+            onValueChange = { onFieldChange("selectedCarMake", it) },
             onDropdownExpand = { carMakeExpanded = true },
             expanded = carMakeExpanded,
-            options = carMakes,
+            options = opts.carMakes,
             placeholder = "Select Car Make",
             onDismissRequest = { carMakeExpanded = false },
             labelComposable = { LabelWithAsterisk("Car Make*") }
@@ -470,14 +362,13 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Car Model Dropdown
         DropdownField(
             label = "",
-            value = selectedCarModel,
-            onValueChange = { selectedCarModel = it },
+            value = state.selectedCarModel,
+            onValueChange = { onFieldChange("selectedCarModel", it) },
             onDropdownExpand = { carModelExpanded = true },
             expanded = carModelExpanded,
-            options = carModels,
+            options = opts.carModels,
             placeholder = "Select Car Model",
             onDismissRequest = { carModelExpanded = false },
             labelComposable = { LabelWithAsterisk("Car Model*") }
@@ -485,14 +376,13 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Fuel Type Dropdown
         DropdownField(
             label = "",
-            value = selectedFuelType,
-            onValueChange = { selectedFuelType = it },
+            value = state.selectedFuelType,
+            onValueChange = { onFieldChange("selectedFuelType", it) },
             onDropdownExpand = { fuelTypeExpanded = true },
             expanded = fuelTypeExpanded,
-            options = fuelTypes,
+            options = opts.fuelTypes,
             placeholder = "Select Fuel Type",
             onDismissRequest = { fuelTypeExpanded = false },
             labelComposable = { LabelWithAsterisk("Fuel Type*") }
@@ -500,26 +390,25 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Car Variant Dropdown
         DropdownField(
             label = "",
-            value = selectedCarVariant,
-            onValueChange = { selectedCarVariant = it },
+            value = state.selectedCarVariant,
+            onValueChange = { onFieldChange("selectedCarVariant", it) },
             onDropdownExpand = { carVariantExpanded = true },
             expanded = carVariantExpanded,
-            options = carVariants,
+            options = opts.carVariants,
             placeholder = "Select Car Variant",
             onDismissRequest = { carVariantExpanded = false },
             labelComposable = { LabelWithAsterisk("Car Variant*") }
         )
-        // Inventory Pickup Checkbox
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Checkbox(
-                checked = isInventoryPickup,
-                onCheckedChange = { isInventoryPickup = it },
+                checked = state.isInventoryPickup,
+                onCheckedChange = { onFieldChange("isInventoryPickup", it) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color00954D,
                     uncheckedColor = Color00954D,
@@ -532,25 +421,23 @@ fun RaiseRequestScreenContent(
             )
         }
 
-        // Dealer Name Input
         TransparentInputField(
             label = "",
-            value = dealerName,
-            onValueChange = { dealerName = it },
+            value = state.dealerName,
+            onValueChange = { onFieldChange("dealerName", it) },
             placeholder = "Enter Dealer Name",
             labelComposable = { LabelWithAsterisk("Dealer Name*") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Dealer Location Dropdown
         DropdownField(
             label = "",
-            value = selectedDealerLocation,
-            onValueChange = { selectedDealerLocation = it },
+            value = state.selectedDealerLocation,
+            onValueChange = { onFieldChange("selectedDealerLocation", it) },
             onDropdownExpand = { dealerLocationExpanded = true },
             expanded = dealerLocationExpanded,
-            options = dealerLocations,
+            options = opts.dealerLocations,
             placeholder = "Select Dealer Location",
             onDismissRequest = { dealerLocationExpanded = false },
             labelComposable = { LabelWithAsterisk("Dealer Location*") }
@@ -558,22 +445,20 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Advisor Name Input
         TransparentInputField(
             label = "",
-            value = advisorName,
-            onValueChange = { advisorName = it },
+            value = state.advisorName,
+            onValueChange = { onFieldChange("advisorName", it) },
             placeholder = "Enter Advisor Name",
             labelComposable = { LabelWithAsterisk("Advisor Name*") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Advisor Contact Number Input
         TransparentInputField(
             label = "",
-            value = advisorContactNumber,
-            onValueChange = { advisorContactNumber = it },
+            value = state.advisorContactNumber,
+            onValueChange = { onFieldChange("advisorContactNumber", it) },
             placeholder = "Enter Advisor Contact Number",
             keyboardType = KeyboardType.Phone,
             labelComposable = { LabelWithAsterisk("Advisor Contact Number*") }
@@ -581,14 +466,13 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Policy Type Dropdown
         DropdownField(
             label = "",
-            value = selectedPolicyType,
-            onValueChange = { selectedPolicyType = it },
+            value = state.selectedPolicyType,
+            onValueChange = { onFieldChange("selectedPolicyType", it) },
             onDropdownExpand = { policyTypeExpanded = true },
             expanded = policyTypeExpanded,
-            options = policyTypes,
+            options = opts.policyTypes,
             placeholder = "Select Policy Type",
             onDismissRequest = { policyTypeExpanded = false },
             labelComposable = { LabelWithAsterisk("Policy Type*") }
@@ -596,17 +480,15 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Claim Number Input
         TransparentInputField(
             label = "Claim Number",
-            value = claimNumber,
-            onValueChange = { claimNumber = it },
+            value = state.claimNumber,
+            onValueChange = { onFieldChange("claimNumber", it) },
             placeholder = "Enter Claim Number"
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Car Reg Number and Make Year Row
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -614,16 +496,16 @@ fun RaiseRequestScreenContent(
             TransparentInputField(
                 modifier = Modifier.weight(1f),
                 label = "Car Reg Number",
-                value = carRegNumber,
-                onValueChange = { carRegNumber = it },
+                value = state.carRegNumber,
+                onValueChange = { onFieldChange("carRegNumber", it) },
                 placeholder = "Registration Number"
             )
 
             TransparentInputField(
                 modifier = Modifier.weight(1f),
                 label = "Make Year",
-                value = makeYear,
-                onValueChange = { makeYear = it },
+                value = state.makeYear,
+                onValueChange = { onFieldChange("makeYear", it) },
                 placeholder = "Enter Make year",
                 keyboardType = KeyboardType.Number
             )
@@ -631,13 +513,39 @@ fun RaiseRequestScreenContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Submit Button
         RegoButton(
             onClick = { onSubmit() },
             text = "Submit"
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun LabelWithAsterisk(text: String) {
+    val isRequired = text.endsWith("*")
+    if (!isRequired) {
+        Text(
+            text = text,
+            style = TextStyle(
+                color = Color1A1A1A_60(),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        )
+    } else {
+        val label = text.removeSuffix("*")
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color1A1A1A_90(), fontSize = 12.sp)) {
+                    append(label)
+                }
+                withStyle(SpanStyle(color = Color(0xFFE7503D))) {
+                    append("*")
+                }
+            }
+        )
     }
 }
 

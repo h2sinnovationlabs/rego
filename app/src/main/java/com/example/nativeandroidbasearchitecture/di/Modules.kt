@@ -16,6 +16,10 @@ import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetai
 import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsApiImpl
 import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsInteractor
 import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsViewModel
+import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestApi
+import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestApiImpl
+import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestInteractor
+import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -39,4 +43,9 @@ val appModule = module {
     factory<OrderDetailsApi> { OrderDetailsApiImpl() }
     factory { OrderDetailsInteractor(get()) }
     viewModel { OrderDetailsViewModel(get()) }
+
+    // Raise a Request
+    factory<RaiseRequestApi> { RaiseRequestApiImpl() }
+    factory { RaiseRequestInteractor(get()) }
+    viewModel { RaiseRequestViewModel(get()) }
 }

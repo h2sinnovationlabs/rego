@@ -75,13 +75,9 @@ fun RaiseRequestParentScreen(
             when (page) {
                 0 -> {
                     // Remove topBar from RaiseRequestScreen since parent has it
-                    RaiseRequestScreenContent(
-                        onSubmit = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(1)
-                            }
-                        }
-                    )
+                    RaiseRequestScreen {
+
+                    }
                 }
 
                 1 -> {
