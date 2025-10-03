@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
 import com.example.nativeandroidbasearchitecture.screens.components.DropdownField
 import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
 import com.example.nativeandroidbasearchitecture.screens.components.TransparentInputField
@@ -73,69 +74,75 @@ fun JoinUsParentScreen(onBack: () -> Unit, onDone: () -> Unit = {}) {
             }
         }
     }
-    Scaffold(modifier = Modifier.navigationBarsPadding()) { innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            // Top Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back),
-                    contentDescription = "Back",
-                    tint = Color1A1A1A.copy(alpha = 0.9f),
-                    modifier = Modifier
-                        .width(28.dp)
-                        .height(28.dp)
-                        .padding(4.dp)
-                        .padding(end = 4.dp)
-                        .clickable { onBack() }
-                )
-                Text(
-                    text = "Join Us",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-            Spacer(
-                modifier = Modifier
-                    .height(1.dp)
-                    .background(Color.Gray)
-            )
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.weight(1f),
-                userScrollEnabled = false
-            ) { page ->
-                when (page) {
-                    0 -> JoinUsFormScreen(
-                        insuranceOptions = state.value.insuranceCompanies.orEmpty(),
-                        companyTypeOptions = state.value.companyTypes.orEmpty(),
-                        onSubmit = { name, email, phone, city, st, insurance, companyType ->
-                            viewModel.onTriggerEvent(
-                                JoinUsEvent.Submit(
-                                    name = name,
-                                    email = email,
-                                    phone = phone,
-                                    city = city,
-                                    state = st,
-                                    insuranceCompany = insurance,
-                                    companyType = companyType
-                                )
-                            )
-                        }
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        DefaultScreenUI(progressBarState = state.value.progressBarState) { paddingValues ->
+            Scaffold(modifier = Modifier.navigationBarsPadding()) { innerPadding ->
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    // Top Bar
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.back),
+                            contentDescription = "Back",
+                            tint = Color1A1A1A.copy(alpha = 0.9f),
+                            modifier = Modifier
+                                .width(28.dp)
+                                .height(28.dp)
+                                .padding(4.dp)
+                                .padding(end = 4.dp)
+                                .clickable { onBack() }
+                        )
+                        Text(
+                            text = "Join Us",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Black,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .background(Color.Gray)
                     )
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.weight(1f),
+                        userScrollEnabled = false
+                    ) { page ->
+                        when (page) {
+                            0 -> JoinUsFormScreen(
+                                insuranceOptions = state.value.insuranceCompanies.orEmpty(),
+                                companyTypeOptions = state.value.companyTypes.orEmpty(),
+                                onSubmit = { name, email, phone, city, st, insurance, companyType ->
+                                    viewModel.onTriggerEvent(
+                                        JoinUsEvent.Submit(
+                                            name = name,
+                                            email = email,
+                                            phone = phone,
+                                            city = city,
+                                            state = st,
+                                            insuranceCompany = insurance,
+                                            companyType = companyType
+                                        )
+                                    )
+                                }
+                            )
 
-                    1 -> JoinUsSuccessScreen(onOkay = onDone)
+                            1 -> JoinUsSuccessScreen(onOkay = onDone)
+                        }
+                    }
                 }
             }
         }

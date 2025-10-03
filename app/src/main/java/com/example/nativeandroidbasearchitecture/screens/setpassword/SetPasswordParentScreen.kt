@@ -58,6 +58,7 @@ import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.collectAsState
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
 import com.example.nativeandroidbasearchitecture.ui.theme.ColorE7503D
 
 @Composable
@@ -71,81 +72,99 @@ fun SetPasswordParentScreen(
     val state by viewModel.state.collectAsState()
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color00954D)
+        modifier = Modifier.fillMaxWidth()
     ) {
-        // Logo at top
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 100.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.rego_brandmark),
-                contentDescription = "Rego Logo",
-                tint = Color.White
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .padding(top = 305.dp, start = 10.dp, end = 10.dp)
-                .height(65.dp)
-                .background(
-                    color = Color.White.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(20.dp)
-                )
-        )
-        // Main content with rounded top corners
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 320.dp)
-                .background(
-                    Color.White,
-                    RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                )
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxSize(),
-                userScrollEnabled = false
-            ) { page ->
-                when (page) {
-                    0 -> WelcomeScreen(
-                        userId = userId,
-                        onSetPassword = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(1) }
-                        },
-                        onSignInClick = {}
+        DefaultScreenUI(progressBarState = state.progressBarState) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color00954D)
+            ) {
+                // Logo at top
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rego_brandmark),
+                        contentDescription = "Rego Logo",
+                        tint = Color.White
                     )
-
-                    1 -> SetPasswordScreen(
-                        userId = userId,
-                        state = state,
-                        onPasswordChange = { viewModel.setEvent(SetPasswordEvent.PasswordChanged(it)) },
-                        onConfirmPasswordChange = {
-                            viewModel.setEvent(
-                                SetPasswordEvent.ConfirmPasswordChanged(
-                                    it
-                                )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .padding(top = 305.dp, start = 10.dp, end = 10.dp)
+                        .height(65.dp)
+                        .background(
+                            color = Color.White.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                )
+                // Main content with rounded top corners
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 320.dp)
+                        .background(
+                            Color.White,
+                            RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                        )
+                ) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        userScrollEnabled = false
+                    ) { page ->
+                        when (page) {
+                            0 -> WelcomeScreen(
+                                userId = userId,
+                                onSetPassword = {
+                                    coroutineScope.launch { pagerState.animateScrollToPage(1) }
+                                },
+                                onSignInClick = {}
                             )
-                        },
-                        onPasswordSet = {
-                            viewModel.setEvent(
-                                SetPasswordEvent.SetPassword(userId, state.password)
-                            )
-                        },
-                        isSubmitting = state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading,
-                        passwordSetSuccess = state.isPasswordSet == true,
-                        error = state.error,
-                        onSuccess = { coroutineScope.launch { pagerState.animateScrollToPage(2) } }
-                    )
 
-                    2 -> PasswordSetScreen(onLogin = onLoginClick)
+                            1 -> SetPasswordScreen(
+                                userId = userId,
+                                state = state,
+                                onPasswordChange = {
+                                    viewModel.setEvent(
+                                        SetPasswordEvent.PasswordChanged(
+                                            it
+                                        )
+                                    )
+                                },
+                                onConfirmPasswordChange = {
+                                    viewModel.setEvent(
+                                        SetPasswordEvent.ConfirmPasswordChanged(
+                                            it
+                                        )
+                                    )
+                                },
+                                onPasswordSet = {
+                                    viewModel.setEvent(
+                                        SetPasswordEvent.SetPassword(userId, state.password)
+                                    )
+                                },
+                                isSubmitting = state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading,
+                                passwordSetSuccess = state.isPasswordSet == true,
+                                error = state.error,
+                                onSuccess = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(
+                                            2
+                                        )
+                                    }
+                                }
+                            )
+
+                            2 -> PasswordSetScreen(onLogin = onLoginClick)
+                        }
+                    }
                 }
             }
         }
