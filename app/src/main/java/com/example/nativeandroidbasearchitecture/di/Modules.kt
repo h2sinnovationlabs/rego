@@ -8,6 +8,14 @@ import com.example.nativeandroidbasearchitecture.screens.main.home.HomeViewModel
 import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsApi
 import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsApiImpl
 import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsViewModel
+import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationApi
+import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationApiImpl
+import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationInteractor
+import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationViewModel
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsApi
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsApiImpl
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsInteractor
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -21,4 +29,14 @@ val appModule = module {
     // Join Us
     factory<JoinUsApi> { JoinUsApiImpl() }
     viewModel { JoinUsViewModel(get()) }
+
+    // Notifications
+    factory<NotificationApi> { NotificationApiImpl() }
+    factory { NotificationInteractor(get()) }
+    viewModel { NotificationViewModel(get()) }
+
+    // Order Details
+    factory<OrderDetailsApi> { OrderDetailsApiImpl() }
+    factory { OrderDetailsInteractor(get()) }
+    viewModel { OrderDetailsViewModel(get()) }
 }

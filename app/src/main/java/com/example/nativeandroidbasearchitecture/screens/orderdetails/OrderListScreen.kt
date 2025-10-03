@@ -33,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,10 +59,19 @@ import com.example.nativeandroidbasearchitecture.ui.theme.fontBoldPoppins
 import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumPoppins
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 data class PartType(
     val name: String,
     val iconRes: Int
+)
+
+// Part types with correct icons
+val partTypes = listOf(
+    PartType("Alloy wheels", R.drawable.alloy_wheel),
+    PartType("Headlamps", R.drawable.car_light),
+    PartType("Plastic repair", R.drawable.car_bumper),
+    PartType("Leather & fabric repair", R.drawable.car_seat)
 )
 
 @SuppressLint("DefaultLocale")
@@ -70,62 +82,16 @@ fun OrderListScreen(
     onBackClick: () -> Unit = {},
     onOrderClick: (String) -> Unit = {}
 ) {
-    var expandedCard by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
-
-    // Part types with correct icons
-    val partTypes = listOf(
-        PartType("Alloy wheels", R.drawable.alloy_wheel),
-        PartType("Headlamps", R.drawable.car_light),
-        PartType("Plastic repair", R.drawable.car_bumper),
-        PartType("Leather & fabric repair", R.drawable.car_seat)
-    )
-
+    val viewModel: OrderDetailsViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
     val pagerState = rememberPagerState(pageCount = { partTypes.size })
 
-    // Sample data for different part types
-    val sampleOrdersByPartType = mapOf(
-        0 to listOf( // Alloy wheels
-            OrderData(
-                orderId = "12042501",
-                status = "Work In Progress",
-                carMake = "Hyundai i20, 2023",
-                deliveryDate = "21/04/25",
-                dealerName = "Prem Motors",
-                dealerLocation = "Sector 18, Gurgoan,\nHaryana "
-            ),
-            OrderData(
-                orderId = "12042502",
-                status = "Work In Progress",
-                carMake = "Hyundai i20, 2023",
-                deliveryDate = "22/04/25"
-            )
-        ),
-        1 to listOf( // Headlamps
-            OrderData(
-                orderId = "12042521",
-                status = "Pickup Aligned",
-                carMake = "Hyundai i20, 2023",
-                deliveryDate = "12/05/25"
-            )
-        ),
-        2 to listOf( // Plastic repair
-            OrderData(
-                orderId = "12042531",
-                status = "Part Delivered",
-                carMake = "Honda City, 2022",
-                deliveryDate = "15/05/25"
-            )
-        ),
-        3 to listOf( // Leather & fabric repair
-            OrderData(
-                orderId = "12042541",
-                status = "Ready for Delivery",
-                carMake = "Toyota Camry, 2021",
-                deliveryDate = "18/05/25"
-            )
-        )
-    )
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(OrderDetailsEvent.Init)
+    }
+
+    var expandedCard by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -191,6 +157,7 @@ fun OrderListScreen(
                             onClick = {
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(index)
+                                    viewModel.setEvent(OrderDetailsEvent.LoadOrders(index))
                                 }
                             },
                             modifier = Modifier.padding(vertical = 16.dp)
@@ -311,7 +278,7 @@ fun OrderListScreen(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                val ordersForPage = sampleOrdersByPartType[page] ?: emptyList()
+                val ordersForPage = state.orderListByType?.get(page) ?: emptyList()
 
                 Column(
                     modifier = Modifier.fillMaxSize()
@@ -347,9 +314,7 @@ fun OrderListScreen(
                                 order = order,
                                 orderType = orderType,
                                 isExpanded = true,
-                                onToggleExpanded = {
-
-                                },
+                                onToggleExpanded = {},
                                 onCardClick = { onOrderClick(order.orderId) },
                                 fromOrderListing = true
                             )

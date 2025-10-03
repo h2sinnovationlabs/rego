@@ -21,11 +21,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,10 +41,20 @@ import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
 import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
+    val context = LocalContext.current
+    val viewModel: OrderDetailsViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(orderId) {
+        viewModel.setEvent(OrderDetailsEvent.LoadOrderDetails(orderId))
+    }
+    val details = state.selectedOrderDetails
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,69 +82,87 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .padding(innerPadding)
-        ) {
-            Spacer(Modifier.height(18.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Order ID: ",
-                    style = fontSemiBoldPoppins().copy(
-                        fontSize = 12.sp,
-                        color = Color.Black.copy(alpha = 0.6f)
-                    )
-                )
-                Text(
-                    text = orderId,
-                    style = fontSemiBoldPoppins().copy(
-                        fontSize = 14.sp,
-                        color = Color.Black.copy(alpha = 0.9f)
-                    )
-                )
-            }
-            Spacer(modifier = Modifier.height(18.dp))
-            DashedDivider()
-            Spacer(Modifier.height(24.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+        if (details == null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text("Loading...", color = Color.Gray)
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+                    .padding(innerPadding)
+            ) {
+                Spacer(Modifier.height(18.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Order ID: ",
+                        style = fontSemiBoldPoppins().copy(
+                            fontSize = 12.sp,
+                            color = Color.Black.copy(alpha = 0.6f)
+                        )
+                    )
+                    Text(
+                        text = details.orderId,
+                        style = fontSemiBoldPoppins().copy(
+                            fontSize = 14.sp,
+                            color = Color.Black.copy(alpha = 0.9f)
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(18.dp))
+                DashedDivider()
+                Spacer(Modifier.height(24.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Part Type:",
+                        style = fontSemiBoldPoppins().copy(
+                            fontSize = 14.sp,
+                            color = Color1A1A1A_90()
+                        )
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Icon(
+                        painter = painterResource(id = R.drawable.alloy_wheel), // Could use mapped icon
+                        contentDescription = details.partType,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        text = details.partType,
+                        style = fontSemiBoldPoppins().copy(
+                            fontSize = 12.sp,
+                            color = Color1A1A1A_90()
+                        )
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "Part Type:",
+                    text = "Part Photos:",
                     style = fontSemiBoldPoppins().copy(fontSize = 14.sp, color = Color1A1A1A_90())
                 )
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    painter = painterResource(id = R.drawable.alloy_wheel),
-                    contentDescription = "Alloy Wheel",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(Modifier.width(6.dp))
-                Text(
-                    text = "Alloy Wheel",
-                    style = fontSemiBoldPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_90())
-                )
+                Spacer(Modifier.height(8.dp))
+                PartPhotoGrid(images = details.partPhotos)
+                Spacer(Modifier.height(8.dp))
+                OrderSummaryCard(details)
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = "Part Photos:",
-                style = fontSemiBoldPoppins().copy(fontSize = 14.sp, color = Color1A1A1A_90())
-            )
-            Spacer(Modifier.height(8.dp))
-            PartPhotoGrid()
-            Spacer(Modifier.height(8.dp))
-            OrderSummaryCard()
-            Spacer(Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun PartPhotoGrid() {
-    val images = List(8) { R.drawable.part_photo }
+fun PartPhotoGrid(images: List<Int>) {
     Column {
         for (row in 0..1) {
             Row(
@@ -138,14 +170,17 @@ fun PartPhotoGrid() {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 for (col in 0..3) {
-                    Image(
-                        painter = painterResource(id = images[row * 4 + col]),
-                        contentDescription = "Part Photo",
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(70.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
+                    val imageRes = images.getOrNull(row * 4 + col)
+                    if (imageRes != null) {
+                        Image(
+                            painter = painterResource(id = imageRes),
+                            contentDescription = "Part Photo",
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(70.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -198,7 +233,7 @@ fun TwoColumnValueRow(
 }
 
 @Composable
-fun OrderSummaryCard() {
+fun OrderSummaryCard(details: OrderDetails) {
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(2.dp),
@@ -212,8 +247,8 @@ fun OrderSummaryCard() {
             )
             Spacer(Modifier.height(2.dp))
             TwoColumnValueRow(
-                value1 = "Hyundai Creta, 2023",
-                value2 = "HR 26 EX 9342"
+                value1 = details.carName,
+                value2 = details.regNumber
             )
             Spacer(modifier = Modifier.height(14.dp))
             TwoColumnLabelRow(
@@ -226,7 +261,7 @@ fun OrderSummaryCard() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Suresh Singh",
+                    details.advisorName,
                     style = fontSemiBoldPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_90())
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -238,7 +273,7 @@ fun OrderSummaryCard() {
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
-                        "9954332342",
+                        details.advisorContact,
                         style = fontSemiBoldPoppins().copy(
                             fontSize = 12.sp,
                             color = Color1A1A1A_90()
@@ -253,8 +288,8 @@ fun OrderSummaryCard() {
             )
             Spacer(Modifier.height(2.dp))
             TwoColumnValueRow(
-                value1 = "Prem Motors",
-                value2 = "Sector 18, Gurgoan, Haryana"
+                value1 = details.dealerName,
+                value2 = details.dealerLocation
             )
             Spacer(modifier = Modifier.height(14.dp))
             TwoColumnLabelRow(
@@ -263,8 +298,8 @@ fun OrderSummaryCard() {
             )
             Spacer(Modifier.height(2.dp))
             TwoColumnValueRow(
-                value1 = "245577545242",
-                value2 = "Pickup denied by Workshop",
+                value1 = details.claimNumber,
+                value2 = details.rejectionReason,
                 value2Color = Color(0xFFE73C33)
             )
         }

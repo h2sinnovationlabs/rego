@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nativeandroidbasearchitecture.R
 import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
@@ -55,6 +54,7 @@ import com.example.nativeandroidbasearchitecture.ui.theme.fontRegularMontserrat
 import com.example.nativeandroidbasearchitecture.ui.theme.fontRegularPoppins
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldMontserrat
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
+import org.koin.androidx.compose.koinViewModel
 
 data class NotificationItem(
     val id: String,
@@ -76,11 +76,7 @@ fun NotificationScreen(
     onBack: () -> Unit = {},
     onNotificationClick: (NotificationItem) -> Unit = {}
 ) {
-    // --- ViewModel and state wiring ---
-    val context = LocalContext.current
-    val viewModel: NotificationViewModel = viewModel(
-        factory = NotificationViewModelFactory()
-    )
+    val viewModel: NotificationViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -277,15 +273,6 @@ fun NotificationCard(
                 }
             }
         }
-    }
-}
-
-// --- Factory for ViewModel ---
-class NotificationViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val api = NotificationApiImpl()
-        val interactor = NotificationInteractor(api)
-        return NotificationViewModel(interactor) as T
     }
 }
 
