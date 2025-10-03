@@ -1,6 +1,6 @@
 package com.example.nativeandroidbasearchitecture.screens.loginoption
 
-import io.fashinzer.base.BaseViewModel
+import com.example.nativeandroidbasearchitecture.screens.base.BaseViewModel
 
 class LoginOptionViewModel :
     BaseViewModel<LoginOptionEvent, LoginOptionViewState, LoginOptionAction>() {
