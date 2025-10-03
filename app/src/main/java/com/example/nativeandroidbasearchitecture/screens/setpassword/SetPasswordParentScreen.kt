@@ -21,6 +21,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,8 +40,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,6 +56,9 @@ import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldMontserrat
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.collectAsState
+import com.example.nativeandroidbasearchitecture.ui.theme.ColorE7503D
 
 @Composable
 fun SetPasswordParentScreen(
@@ -64,6 +67,8 @@ fun SetPasswordParentScreen(
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 1)
     val coroutineScope = rememberCoroutineScope()
+    val viewModel: SetPasswordViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
@@ -115,15 +120,29 @@ fun SetPasswordParentScreen(
                         onSetPassword = {
                             coroutineScope.launch { pagerState.animateScrollToPage(1) }
                         },
-                        onSignInClick = {
-//                            onSignInClick()
-                        }
+                        onSignInClick = {}
                     )
 
                     1 -> SetPasswordScreen(
+                        userId = userId,
+                        state = state,
+                        onPasswordChange = { viewModel.setEvent(SetPasswordEvent.PasswordChanged(it)) },
+                        onConfirmPasswordChange = {
+                            viewModel.setEvent(
+                                SetPasswordEvent.ConfirmPasswordChanged(
+                                    it
+                                )
+                            )
+                        },
                         onPasswordSet = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(2) }
-                        }
+                            viewModel.setEvent(
+                                SetPasswordEvent.SetPassword(userId, state.password)
+                            )
+                        },
+                        isSubmitting = state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading,
+                        passwordSetSuccess = state.isPasswordSet == true,
+                        error = state.error,
+                        onSuccess = { coroutineScope.launch { pagerState.animateScrollToPage(2) } }
                     )
 
                     2 -> PasswordSetScreen(onLogin = onLoginClick)
@@ -233,25 +252,30 @@ fun WelcomeScreenPreview() {
 
 @Composable
 private fun SetPasswordScreen(
-    onPasswordSet: () -> Unit
+    userId: String,
+    state: SetPasswordViewState,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onPasswordSet: () -> Unit,
+    isSubmitting: Boolean,
+    passwordSetSuccess: Boolean,
+    error: String?,
+    onSuccess: () -> Unit
 ) {
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var showError by remember { mutableStateOf(false) }
-
-    // Validate passwords match
+    val password = state.password
+    val confirmPassword = state.confirmPassword
     val passwordsMatch =
         password.isNotEmpty() && confirmPassword.isNotEmpty() && password == confirmPassword
     val isFormValid = password.isNotEmpty() && confirmPassword.isNotEmpty() && passwordsMatch
-
-    // Show error when confirm password is not empty and doesn't match
-    showError = confirmPassword.isNotEmpty() && password != confirmPassword
-
+    val showError = confirmPassword.isNotEmpty() && password != confirmPassword
     val scrollState = rememberScrollState()
 
-    // Bottom white section with form
+    // Navigate to success page if password was set
+    if (passwordSetSuccess) {
+        onSuccess()
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -274,32 +298,44 @@ private fun SetPasswordScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Password Field
             PasswordTransparentInputField(
                 label = "Password",
                 value = password,
-                onValueChange = { password = it },
-                passwordVisible = passwordVisible,
-                onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
+                onValueChange = onPasswordChange,
+                passwordVisible = false,
+                onPasswordVisibilityChange = {},
                 placeholder = "•••••••••",
                 isError = false
             )
-
-            // Confirm Password Field
             PasswordTransparentInputField(
                 label = "Re enter password",
                 value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                passwordVisible = confirmPasswordVisible,
-                onPasswordVisibilityChange = {
-                    confirmPasswordVisible = !confirmPasswordVisible
-                },
+                onValueChange = onConfirmPasswordChange,
+                passwordVisible = false,
+                onPasswordVisibilityChange = {},
                 placeholder = "•••••••••",
                 isError = showError
             )
-
-            // Error message
             if (showError) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.error),
+                        contentDescription = "Error",
+                        tint = ColorE7503D,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Password doesn't match",
+                        color = ColorE7503D,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+            if (error != null) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -312,20 +348,18 @@ private fun SetPasswordScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Password doesn't match",
+                        text = error,
                         color = Color.Red,
                         fontSize = 14.sp
                     )
                 }
             }
         }
-
         Spacer(modifier = Modifier.weight(1f))
-
         RegoButton(
             onClick = onPasswordSet,
             text = "Set Password",
-            enabled = isFormValid
+            enabled = isFormValid && !isSubmitting
         )
     }
 }
@@ -467,7 +501,17 @@ private fun PasswordSetScreen(
 @Preview(showBackground = true)
 @Composable
 fun SetPasswordScreenPreview() {
-    SetPasswordScreen(onPasswordSet = {})
+    SetPasswordScreen(
+        userId = "ICI01",
+        state = SetPasswordViewState(),
+        onPasswordChange = { },
+        onConfirmPasswordChange = { },
+        onPasswordSet = { },
+        isSubmitting = false,
+        passwordSetSuccess = false,
+        error = null,
+        onSuccess = { }
+    )
 }
 
 @Preview(showBackground = true)

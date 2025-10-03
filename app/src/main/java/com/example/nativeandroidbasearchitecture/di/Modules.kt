@@ -20,6 +20,10 @@ import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseReque
 import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestApiImpl
 import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestInteractor
 import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestViewModel
+import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordApi
+import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordApiImpl
+import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordInteractor
+import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -48,4 +52,9 @@ val appModule = module {
     factory<RaiseRequestApi> { RaiseRequestApiImpl() }
     factory { RaiseRequestInteractor(get()) }
     viewModel { RaiseRequestViewModel(get()) }
+
+    // Set password
+    factory<SetPasswordApi> { SetPasswordApiImpl() }
+    factory { SetPasswordInteractor(get()) }
+    viewModel { SetPasswordViewModel(get()) }
 }

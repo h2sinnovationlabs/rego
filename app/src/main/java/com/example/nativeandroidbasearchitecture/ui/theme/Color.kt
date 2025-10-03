@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 val Color00954D = Color(0xFF00954D)
 val Color1A1A1A = Color(0xFF1A1A1A)
 val ColorFBFBFB = Color(0xFFFBFBFB)
+val ColorE7503D = Color(0xFFE7503D)
 
 fun Color1A1A1A_16() = Color1A1A1A.copy(alpha = 0.16f)
 fun Color1A1A1A_60() = Color1A1A1A.copy(alpha = 0.6f)
