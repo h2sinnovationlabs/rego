@@ -1,13 +1,20 @@
 package com.example.nativeandroidbasearchitecture.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.nativeandroidbasearchitecture.screens.joinus.JoinUsParentScreen
 import com.example.nativeandroidbasearchitecture.screens.loginoption.LoginOptionScreen
-import com.example.nativeandroidbasearchitecture.screens.main.MainScreen
-import kotlinx.coroutines.delay
+import com.example.nativeandroidbasearchitecture.screens.main.home.HomeScreen
+import com.example.nativeandroidbasearchitecture.screens.main.profile.ProfileScreen
+import com.example.nativeandroidbasearchitecture.screens.mobileverification.MobileVerificationScreen
+import com.example.nativeandroidbasearchitecture.screens.notifications.NotificationScreen
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderDetailsScreen
+import com.example.nativeandroidbasearchitecture.screens.orderdetails.OrderListScreen
+import com.example.nativeandroidbasearchitecture.screens.raiserequest.RaiseRequestParentScreen
+import com.example.nativeandroidbasearchitecture.screens.setpassword.SetPasswordParentScreen
+import com.example.nativeandroidbasearchitecture.screens.splash.SplashScreen
 
 @Composable
 fun AppNavHost() {
@@ -15,9 +22,7 @@ fun AppNavHost() {
 
     NavHost(navController = navController, startDestination = Destinations.Splash.route) {
         composable(Destinations.Splash.route) {
-            // Splash should show once and auto navigate after 2s
-            LaunchedEffect(Unit) {
-                delay(2000)
+            SplashScreen {
                 navController.navigate(Destinations.LoginOptions.route) {
                     popUpTo(Destinations.Splash.route) { inclusive = true }
                 }
@@ -32,9 +37,9 @@ fun AppNavHost() {
         }
 
         composable(Destinations.Login.route) {
-            com.example.composekoinnav.screens.auth.LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Destinations.Main.route) {
+            MobileVerificationScreen(
+                onVerificationComplete = {
+                    navController.navigate(Destinations.Home.route) {
                         popUpTo(Destinations.LoginOptions.route) { inclusive = true }
                     }
                 }
@@ -42,53 +47,101 @@ fun AppNavHost() {
         }
 
         composable(Destinations.Signup.route) {
-            com.example.composekoinnav.screens.auth.SignUpScreen(
-                onSignUpComplete = {
-                    // after signup navigate to login
-                    navController.navigate(Destinations.Login.route) {
-                        popUpTo(Destinations.Signup.route) { inclusive = true }
+            JoinUsParentScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onDone = {
+                    navController.navigate(Destinations.Home.route) {
+                        popUpTo(Destinations.LoginOptions.route) { inclusive = true }
                     }
                 }
             )
         }
 
         composable(Destinations.Home.route) {
-            MainScreen(
-                onHomeClick = {
-
-                },
+            HomeScreen(
                 onProfileClick = {
-
+                    if (navController.currentDestination?.route != Destinations.Profile.route) {
+                        navController.navigate(Destinations.Profile.route)
+                    }
                 },
                 onRaiseRequest = {
-
+                    navController.navigate(Destinations.RaiseRequest.route)
                 },
                 onGridOptionClick = {
 
                 },
                 onOrderClick = {
-
-                })
+                    navController.navigate(Destinations.OrderDetails.route)
+                },
+                onOrderListClick = {
+                    navController.navigate(Destinations.OrdersList.createRoute(it))
+                },
+                onNotificationClick = {
+                    navController.navigate(Destinations.Notification.route)
+                }
+            )
         }
 
         composable(Destinations.RaiseRequest.route) {
-            com.example.composekoinnav.screens.home.RaiseRequestScreen(onSubmit = {
-                navController.popBackStack()
-            })
+            RaiseRequestParentScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(Destinations.OrdersList.route) { backStackEntry ->
             val type = backStackEntry.arguments?.getString("type") ?: "default"
-            com.example.composekoinnav.screens.orders.OrdersListScreen(
-                type = type,
+            OrderListScreen(
+                orderType = type,
                 onOrderClick = { orderId ->
                     navController.navigate(Destinations.OrderDetails.createRoute(orderId))
-                })
+                },
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(Destinations.OrderDetails.route) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId") ?: "-1"
-            com.example.composekoinnav.screens.orders.OrderDetailsScreen(orderId = orderId)
+            OrderDetailsScreen(
+                orderId = orderId,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Destinations.Notification.route) { backStackEntry ->
+            NotificationScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Destinations.Profile.route) { backStackEntry ->
+            ProfileScreen(
+                onChangePasswordClick = {
+                    navController.navigate(Destinations.ResetPassword.route)
+                },
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onHomeClick = {
+                    if (navController.currentDestination?.route == Destinations.Profile.route) {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        }
+        composable(Destinations.ResetPassword.route) { backStackEntry ->
+            SetPasswordParentScreen(
+                onLoginClick = {
+                    navController.navigate(Destinations.LoginOptions.route)
+                }
+            )
         }
     }
 }

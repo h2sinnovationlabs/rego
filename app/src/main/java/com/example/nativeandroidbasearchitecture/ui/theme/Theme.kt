@@ -1,6 +1,5 @@
 package com.example.nativeandroidbasearchitecture.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +51,7 @@ fun NativeAndroidBaseArchitectureTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = MaterialTheme.typography,
         content = content
     )
 }

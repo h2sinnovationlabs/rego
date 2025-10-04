@@ -36,7 +36,7 @@ android {
     }
     kotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
+            jvmTarget = JvmTarget.JVM_17
         }
     }
     buildFeatures {
@@ -60,6 +60,13 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.serialization.core)
+
+    // Image picking 
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // Image loading
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
