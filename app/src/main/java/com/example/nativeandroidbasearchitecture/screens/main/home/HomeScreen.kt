@@ -27,6 +27,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -54,6 +56,7 @@ import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_16
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_40
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
+import com.example.nativeandroidbasearchitecture.ui.theme.Color94A3B8
 import com.example.nativeandroidbasearchitecture.ui.theme.fontLightPoppins
 import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumPoppins
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
@@ -528,7 +531,7 @@ fun BottomNavBar(
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(modifier = modifier.shadow(8.dp), containerColor = Color.White) {
         NavigationBarItem(
             selected = isHomeSelected,
             onClick = {
@@ -539,10 +542,13 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.home),
-                    contentDescription = "Home"
+                    contentDescription = "Home",
+                    tint = if (isHomeSelected) Color00954D else Color94A3B8
                 )
             },
-            label = { Text("Home") })
+            label = { Text("Home", color = if (isHomeSelected) Color00954D else Color94A3B8) },
+            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
+        )
         NavigationBarItem(
             selected = isProfileSelected,
             onClick = {
@@ -554,9 +560,12 @@ fun BottomNavBar(
                 Icon(
                     painter = painterResource(R.drawable.person),
                     contentDescription = "Account",
+                    tint = if (isHomeSelected) Color94A3B8 else Color00954D
                 )
             },
-            label = { Text("Account") })
+            label = { Text("Account", color = if (isHomeSelected) Color94A3B8 else Color00954D) },
+            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
+        )
     }
 }
 
