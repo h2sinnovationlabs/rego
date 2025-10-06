@@ -133,14 +133,10 @@ fun RaiseRequestScreenContent(
     var hasPermissions by remember { mutableStateOf(false) }
     val tempImageUriRemember = remember { mutableStateOf<Uri?>(null) }
 
+    var lastImageSource by remember { mutableStateOf<String?>(null) }
+
     val selectedImages = remember(state.images) {
         mutableListOf<Uri>().apply { addAll(state.images.mapNotNull { runCatching { Uri.parse(it) }.getOrNull() }) }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        hasPermissions = permissions[Manifest.permission.CAMERA] == true
     }
 
     fun createTempImageUri(context: Context): Uri {
@@ -172,6 +168,27 @@ fun RaiseRequestScreenContent(
                 val newImages = state.images + uri.toString()
                 onFieldChange("images", newImages)
             }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasPermissions = permissions[Manifest.permission.CAMERA] == true
+        if (hasPermissions) {
+            if (lastImageSource == "CAMERA") {
+                try {
+                    val uri = createTempImageUri(context)
+                    tempImageUriRemember.value = uri
+                    cameraLauncher.launch(uri)
+                } catch (e: Exception) {
+                    println("Error creating temp file: ${e.message}")
+                    e.printStackTrace()
+                }
+            } else if (lastImageSource == "GALLERY") {
+                galleryLauncher.launch("image/*")
+            }
+            lastImageSource = null // Reset so next time intent is fresh
         }
     }
 
@@ -309,7 +326,7 @@ fun RaiseRequestScreenContent(
                                     e.printStackTrace()
                                 }
                             } else {
-                                println("Camera permission not granted, requesting permission")
+                                lastImageSource = "CAMERA"
                                 permissionLauncher.launch(
                                     arrayOf(Manifest.permission.CAMERA)
                                 )
@@ -322,6 +339,7 @@ fun RaiseRequestScreenContent(
                 dismissButton = {
                     TextButton(
                         onClick = {
+                            lastImageSource = "GALLERY"
                             galleryLauncher.launch("image/*")
                             showImagePickerDialog = false
                         }

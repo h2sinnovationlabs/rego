@@ -39,6 +39,12 @@ fun RaiseRequestParentScreen(
     val pagerState = rememberPagerState(pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
 
+    fun onSubmitNavigateToConfirmation() {
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(1)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
         topBar = {
@@ -75,9 +81,9 @@ fun RaiseRequestParentScreen(
             when (page) {
                 0 -> {
                     // Remove topBar from RaiseRequestScreen since parent has it
-                    RaiseRequestScreen {
-
-                    }
+                    RaiseRequestScreen(
+                        onSubmit = { onSubmitNavigateToConfirmation() }
+                    )
                 }
 
                 1 -> {
