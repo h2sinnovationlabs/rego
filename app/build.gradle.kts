@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.androidx.ui.text)
 
     // Image picking 
     implementation("androidx.activity:activity-compose:1.9.0")

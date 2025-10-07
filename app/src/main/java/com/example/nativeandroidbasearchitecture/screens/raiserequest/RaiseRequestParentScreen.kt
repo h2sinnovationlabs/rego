@@ -1,8 +1,8 @@
 package com.example.nativeandroidbasearchitecture.screens.raiserequest
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,23 +13,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
 import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldMontserrat
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.statusBarsPadding
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,45 +38,53 @@ fun RaiseRequestParentScreen(
     val pagerState = rememberPagerState(pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back),
-                    contentDescription = "Back",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onBack() }
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Raise a Request",
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color1A1A1A_90()
-                )
-            }
+    fun onSubmitNavigateToConfirmation() {
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(1)
         }
-    ) { paddingValues ->
+    }
+
+    DefaultScreenUI { paddingValues ->
+        Spacer(modifier = Modifier.size(paddingValues.calculateTopPadding()))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 20.dp,
+                    start = 14.dp,
+                    bottom = 14.dp,
+                    end = 14.dp
+                )
+                .background(Color.White),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.back),
+                contentDescription = "Back",
+                tint = Color1A1A1A_90(),
+                modifier = Modifier
+                    .size(22.dp)
+                    .clickable { onBack() }
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = "Raise a Request",
+                style = fontSemiBoldMontserrat().copy(fontSize = 16.sp),
+                color = Color1A1A1A_90(),
+            )
+        }
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+                .fillMaxSize(),
             userScrollEnabled = false // Disable manual scrolling
         ) { page ->
             when (page) {
                 0 -> {
                     // Remove topBar from RaiseRequestScreen since parent has it
-                    RaiseRequestScreen {
-
-                    }
+                    RaiseRequestScreen(
+                        onSubmit = { onSubmitNavigateToConfirmation() }
+                    )
                 }
 
                 1 -> {
