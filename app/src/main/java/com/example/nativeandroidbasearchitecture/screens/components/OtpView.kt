@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -190,8 +189,8 @@ fun OtpInputViewType2(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .width(44.dp)
-                    .height(44.dp)
+                    .width(40f.toWidthPx())
+                    .height(40f.toHeightPx())
                     .border(
                         width = 1.dp,
                         color = if (otpValues[index].isNotEmpty()) Color00954D else Color.Black.copy(
