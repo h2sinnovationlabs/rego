@@ -178,7 +178,7 @@ fun OtpInputViewType2(
     val focusRequesters = remember { List(otpLength) { FocusRequester() } }
 
     Row(
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalArrangement = Arrangement.spacedBy(12f.toWidthPx()),
         modifier = modifier
             .wrapContentWidth()
             .padding(horizontal = 13.dp),

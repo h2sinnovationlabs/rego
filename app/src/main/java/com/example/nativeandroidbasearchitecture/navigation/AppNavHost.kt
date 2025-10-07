@@ -20,7 +20,7 @@ import com.example.nativeandroidbasearchitecture.screens.splash.SplashScreen
 fun AppNavHost() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Destinations.Home.route) {
+    NavHost(navController = navController, startDestination = Destinations.Splash.route) {
         composable(Destinations.Splash.route) {
             SplashScreen {
                 navController.navigate(Destinations.LoginOptions.route) {

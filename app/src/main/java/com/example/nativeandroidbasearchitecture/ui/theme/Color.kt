@@ -15,6 +15,8 @@ val ColorFBFBFB = Color(0xFFFBFBFB)
 val ColorE7503D = Color(0xFFE7503D)
 val Color94A3B8 = Color(0xFF94A3B8)
 val ColorFFFFFF = Color(0xFFFFFFFF)
+val ColorF9F9F9 = Color(0xFFF9F9F9)
+val ColorEDEDED = Color(0xFFEDEDED)
 
 fun Color1A1A1A_16() = Color1A1A1A.copy(alpha = 0.16f)
 fun Color1A1A1A_60() = Color1A1A1A.copy(alpha = 0.6f)

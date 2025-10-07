@@ -11,7 +11,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -31,7 +29,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -60,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
 import com.example.nativeandroidbasearchitecture.screens.components.DropdownField
 import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
 import com.example.nativeandroidbasearchitecture.screens.components.TransparentInputField
@@ -67,6 +65,7 @@ import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_87
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
+import com.example.nativeandroidbasearchitecture.ui.theme.ColorF9F9F9
 import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
 import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
 import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumMontserrat
@@ -91,25 +90,20 @@ fun RaiseRequestScreen(
         viewModel.setEvent(RaiseRequestEvent.Init)
     }
 
-    Scaffold { paddingValues ->
-        if (state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Loading...", color = Color.Gray)
-            }
-        } else if (state.error != null) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "${'$'}{state.error}", color = Color.Red)
-            }
-        } else {
-            RaiseRequestScreenContent(
-                state = state,
-                onFieldChange = { field, value ->
-                    viewModel.setEvent(RaiseRequestEvent.FieldChanged(field, value))
-                },
-                onSubmit = onSubmit,
-                modifier = Modifier.padding(paddingValues)
-            )
-        }
+    DefaultScreenUI(progressBarState = state.progressBarState) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .background(ColorF9F9F9)
+                .fillMaxWidth()
+                .height(16.dp)
+        )
+        RaiseRequestScreenContent(
+            state = state,
+            onFieldChange = { field, value ->
+                viewModel.setEvent(RaiseRequestEvent.FieldChanged(field, value))
+            },
+            onSubmit = onSubmit
+        )
     }
 }
 

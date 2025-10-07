@@ -95,6 +95,7 @@ fun DropdownField(
                 )
             }
             DropdownMenu(
+                modifier = Modifier.background(Color.White),
                 expanded = expanded,
                 onDismissRequest = onDismissRequest
             ) {
