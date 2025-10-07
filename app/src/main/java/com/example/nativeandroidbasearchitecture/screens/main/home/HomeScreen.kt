@@ -83,7 +83,10 @@ fun HomeScreen(
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        DefaultScreenUI(progressBarState = state.value.progressBarState) { paddingValues ->
+        DefaultScreenUI(
+            progressBarState = state.value.progressBarState,
+            isBottomBarInScreen = true
+        ) { paddingValues ->
             TopBarSection(paddingValues, onNotificationClick = onNotificationClick)
             HomeScreenContent(
                 state,
