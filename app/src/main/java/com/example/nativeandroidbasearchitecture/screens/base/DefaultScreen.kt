@@ -67,6 +67,7 @@ fun DefaultScreenUI(
                         onRefresh()
                     }
                 )
+                .padding(bottom = if (isBottomBarInScreen) 56.dp else 0.dp)
                 .background(Color.Transparent)
         ) {
             Column(
