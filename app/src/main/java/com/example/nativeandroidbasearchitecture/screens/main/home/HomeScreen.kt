@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +46,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -97,8 +101,7 @@ fun HomeScreen(
         }
         BottomNavBar(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .fillMaxWidth(),
+                .align(Alignment.BottomEnd),
             isHomeSelected = true,
             onHomeClick = {
 
@@ -531,41 +534,79 @@ fun BottomNavBar(
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    NavigationBar(modifier = modifier.shadow(8.dp), containerColor = Color.White) {
-        NavigationBarItem(
-            selected = isHomeSelected,
-            onClick = {
-                if (isProfileSelected) {
-                    onHomeClick()
+    Surface(
+        modifier = modifier
+            .wrapContentWidth()
+            .shadow(8.dp, RectangleShape),
+        color = Color.White,
+        tonalElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(top = 8.dp, bottom = 18.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 18.dp, vertical = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .clickable { onHomeClick() }
+                        .align(Alignment.CenterEnd)
+                        .wrapContentWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.home),
+                        contentDescription = "Home",
+                        tint = if (isHomeSelected) Color00954D else Color94A3B8
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        "Home", style = fontMediumPoppins().copy(
+                            color = if (isHomeSelected) Color00954D else Color94A3B8,
+                            fontSize = 10.sp
+                        )
+                    )
                 }
-            },
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.home),
-                    contentDescription = "Home",
-                    tint = if (isHomeSelected) Color00954D else Color94A3B8
-                )
-            },
-            label = { Text("Home", color = if (isHomeSelected) Color00954D else Color94A3B8) },
-            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
-        )
-        NavigationBarItem(
-            selected = isProfileSelected,
-            onClick = {
-                if (isHomeSelected) {
-                    onProfileClick()
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onProfileClick() }
+                    .padding(horizontal = 18.dp, vertical = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .clickable { onProfileClick() }
+                        .align(Alignment.CenterStart)
+                        .wrapContentWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.person),
+                        contentDescription = "Account",
+                        tint = if (isProfileSelected) Color00954D else Color94A3B8
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        "Account",
+                        style = fontMediumPoppins().copy(
+                            color = if (isProfileSelected) Color00954D else Color94A3B8,
+                            fontSize = 10.sp
+                        )
+                    )
                 }
-            },
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.person),
-                    contentDescription = "Account",
-                    tint = if (isHomeSelected) Color94A3B8 else Color00954D
-                )
-            },
-            label = { Text("Account", color = if (isHomeSelected) Color94A3B8 else Color00954D) },
-            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
-        )
+            }
+        }
     }
 }
 
