@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NativeAndroidBaseArchitecture"
+rootProject.name = "Rego"
 include(":app")
  

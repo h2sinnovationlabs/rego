@@ -1,6 +1,0 @@
-package com.example.nativeandroidbasearchitecture.screens.base
-
-
-interface ViewEvent
-interface ViewState
-interface ViewSingleAction
