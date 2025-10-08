@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.nativeandroidbasearchitecture"
+    namespace = "com.rego"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.nativeandroidbasearchitecture"
+        applicationId = "com.rego"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -60,6 +60,15 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+
+    val ktorVersion = "3.3.0"
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.auth)
 
     // Image picking 
     implementation("androidx.activity:activity-compose:1.9.0")
@@ -67,6 +76,7 @@ dependencies {
 
     // Image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.firebase.crashlytics.buildtools)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
