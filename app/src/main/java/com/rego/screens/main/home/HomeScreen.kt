@@ -1,6 +1,5 @@
 package com.rego.screens.main.home
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,6 +52,7 @@ import com.rego.ui.theme.Color1A1A1A_16
 import com.rego.ui.theme.Color1A1A1A_40
 import com.rego.ui.theme.Color1A1A1A_60
 import com.rego.ui.theme.Color1A1A1A_90
+import com.rego.ui.theme.Color94A3B8
 import com.rego.ui.theme.fontLightPoppins
 import com.rego.ui.theme.fontMediumPoppins
 import com.rego.ui.theme.fontSemiBoldPoppins
@@ -497,7 +497,11 @@ fun BottomNavBar(
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(
+        containerColor = Color.White,
+        modifier = modifier,
+        contentColor = Color.Transparent
+    ) {
         NavigationBarItem(
             selected = isHomeSelected,
             onClick = {
@@ -508,10 +512,11 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.home),
-                    contentDescription = "Home"
+                    contentDescription = "Home",
+                    tint = if (isHomeSelected) Color00954D else Color94A3B8
                 )
             },
-            label = { Text("Home") })
+            label = { Text("Home", color = if (isHomeSelected) Color00954D else Color94A3B8) })
         NavigationBarItem(
             selected = isProfileSelected,
             onClick = {
@@ -523,16 +528,23 @@ fun BottomNavBar(
                 Icon(
                     painter = painterResource(R.drawable.person),
                     contentDescription = "Profile",
+                    tint = if (isProfileSelected) Color00954D else Color94A3B8
                 )
             },
-            label = { Text("Profile") })
+            label = {
+                Text(
+                    "Profile",
+                    color = if (isProfileSelected) Color00954D else Color94A3B8
+                )
+            })
     }
 }
 
 @Composable
 fun TopBarSection(paddingValues: PaddingValues, onNotificationClick: () -> Unit) {
     Box(
-        modifier = Modifier.background(Color00954D)
+        modifier = Modifier
+            .background(Color00954D)
             .fillMaxWidth()
             .padding(top = paddingValues.calculateTopPadding())
             .padding(horizontal = 20.dp, vertical = 20.dp)
