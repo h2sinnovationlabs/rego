@@ -23,12 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
-import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.ui.theme.Color1A1A1A_90
+import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.statusBarsPadding
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

@@ -57,17 +57,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.screens.components.DropdownField
-import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
-import com.example.nativeandroidbasearchitecture.screens.components.TransparentInputField
-import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_87
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
-import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
-import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
-import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumMontserrat
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.screens.components.DropdownField
+import com.rego.screens.components.RegoButton
+import com.rego.screens.components.TransparentInputField
+import com.rego.ui.theme.Color00954D
+import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.Color1A1A1A_87
+import com.rego.ui.theme.Color1A1A1A_90
+import com.rego.ui.theme.ColorF9F9F9
+import com.rego.ui.theme.ColorFBFBFB
+import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontMediumMontserrat
 import org.koin.androidx.compose.koinViewModel
 
 data class PartType(

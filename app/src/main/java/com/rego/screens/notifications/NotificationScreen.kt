@@ -1,4 +1,4 @@
-package com.example.nativeandroidbasearchitecture.screens.notifications
+package com.rego.screens.notifications
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,18 +37,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
-import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
-import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
-import com.example.nativeandroidbasearchitecture.ui.theme.fontRegularMontserrat
-import com.example.nativeandroidbasearchitecture.ui.theme.fontRegularPoppins
-import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldMontserrat
-import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.ui.theme.Color00954D
+import com.rego.ui.theme.Color1A1A1A
+import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.Color1A1A1A_90
+import com.rego.ui.theme.ColorFBFBFB
+import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontRegularMontserrat
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import org.koin.androidx.compose.koinViewModel
 
 data class NotificationItem(
@@ -120,7 +118,7 @@ fun NotificationScreen(
                     viewModel.setEvent(NotificationEvent.NotificationClicked(notification))
                     onNotificationClick(notification)
                 },
-                isLoading = state.progressBarState == com.example.nativeandroidbasearchitecture.screens.base.ProgressBarState.Loading
+                isLoading = state.progressBarState == com.rego.screens.base.ProgressBarState.Loading
             )
         }
     }

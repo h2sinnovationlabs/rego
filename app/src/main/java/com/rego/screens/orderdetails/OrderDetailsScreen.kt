@@ -35,12 +35,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.screens.components.DashedDivider
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
-import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
-import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.screens.components.DashedDivider
+import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.Color1A1A1A_90
+import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontSemiBoldMontserrat
+import com.rego.ui.theme.fontSemiBoldPoppins
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

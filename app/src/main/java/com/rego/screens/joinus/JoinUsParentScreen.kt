@@ -1,4 +1,4 @@
-package com.example.nativeandroidbasearchitecture.screens.joinus
+package com.rego.screens.joinus
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,14 +42,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
-import com.example.nativeandroidbasearchitecture.screens.components.DropdownField
-import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
-import com.example.nativeandroidbasearchitecture.screens.components.TransparentInputField
-import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A
-import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.screens.components.DropdownField
+import com.rego.screens.components.RegoButton
+import com.rego.screens.components.TransparentInputField
+import com.rego.ui.theme.Color00954D
+import com.rego.ui.theme.Color1A1A1A
+import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 

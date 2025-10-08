@@ -1,4 +1,4 @@
-package com.example.nativeandroidbasearchitecture.screens.loginoption
+package com.rego.screens.loginoption
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,13 +33,13 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nativeandroidbasearchitecture.R
-import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
-import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
+import com.rego.R
+import com.rego.screens.base.DefaultScreenUI
+import com.rego.screens.components.RegoButton
 import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
 
 @Composable
 fun LoginOptionScreen(
