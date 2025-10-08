@@ -57,17 +57,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.rego.R
-import com.rego.screens.components.DropdownField
-import com.rego.screens.components.RegoButton
-import com.rego.screens.components.TransparentInputField
-import com.rego.ui.theme.Color00954D
-import com.rego.ui.theme.Color1A1A1A_60
-import com.rego.ui.theme.Color1A1A1A_87
-import com.rego.ui.theme.Color1A1A1A_90
-import com.rego.ui.theme.ColorFBFBFB
-import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
-import com.rego.ui.theme.fontMediumMontserrat
+import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.components.DropdownField
+import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
+import com.example.nativeandroidbasearchitecture.screens.components.TransparentInputField
+import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_87
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
+import com.example.nativeandroidbasearchitecture.ui.theme.ColorFBFBFB
+import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumMontserrat
 import org.koin.androidx.compose.koinViewModel
 
 data class PartType(
@@ -89,25 +89,20 @@ fun RaiseRequestScreen(
         viewModel.setEvent(RaiseRequestEvent.Init)
     }
 
-    Scaffold { paddingValues ->
-        if (state.progressBarState == com.rego.screens.base.ProgressBarState.Loading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Loading...", color = Color.Gray)
-            }
-        } else if (state.error != null) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "${'$'}{state.error}", color = Color.Red)
-            }
-        } else {
-            RaiseRequestScreenContent(
-                state = state,
-                onFieldChange = { field, value ->
-                    viewModel.setEvent(RaiseRequestEvent.FieldChanged(field, value))
-                },
-                onSubmit = onSubmit,
-                modifier = Modifier.padding(paddingValues)
-            )
-        }
+    DefaultScreenUI(progressBarState = state.progressBarState) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .background(ColorF9F9F9)
+                .fillMaxWidth()
+                .height(16.dp)
+        )
+        RaiseRequestScreenContent(
+            state = state,
+            onFieldChange = { field, value ->
+                viewModel.setEvent(RaiseRequestEvent.FieldChanged(field, value))
+            },
+            onSubmit = onSubmit
+        )
     }
 }
 
@@ -131,14 +126,10 @@ fun RaiseRequestScreenContent(
     var hasPermissions by remember { mutableStateOf(false) }
     val tempImageUriRemember = remember { mutableStateOf<Uri?>(null) }
 
+    var lastImageSource by remember { mutableStateOf<String?>(null) }
+
     val selectedImages = remember(state.images) {
         mutableListOf<Uri>().apply { addAll(state.images.mapNotNull { runCatching { Uri.parse(it) }.getOrNull() }) }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        hasPermissions = permissions[Manifest.permission.CAMERA] == true
     }
 
     fun createTempImageUri(context: Context): Uri {
@@ -170,6 +161,27 @@ fun RaiseRequestScreenContent(
                 val newImages = state.images + uri.toString()
                 onFieldChange("images", newImages)
             }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasPermissions = permissions[Manifest.permission.CAMERA] == true
+        if (hasPermissions) {
+            if (lastImageSource == "CAMERA") {
+                try {
+                    val uri = createTempImageUri(context)
+                    tempImageUriRemember.value = uri
+                    cameraLauncher.launch(uri)
+                } catch (e: Exception) {
+                    println("Error creating temp file: ${e.message}")
+                    e.printStackTrace()
+                }
+            } else if (lastImageSource == "GALLERY") {
+                galleryLauncher.launch("image/*")
+            }
+            lastImageSource = null // Reset so next time intent is fresh
         }
     }
 
@@ -307,7 +319,7 @@ fun RaiseRequestScreenContent(
                                     e.printStackTrace()
                                 }
                             } else {
-                                println("Camera permission not granted, requesting permission")
+                                lastImageSource = "CAMERA"
                                 permissionLauncher.launch(
                                     arrayOf(Manifest.permission.CAMERA)
                                 )
@@ -320,6 +332,7 @@ fun RaiseRequestScreenContent(
                 dismissButton = {
                     TextButton(
                         onClick = {
+                            lastImageSource = "GALLERY"
                             galleryLauncher.launch("image/*")
                             showImagePickerDialog = false
                         }

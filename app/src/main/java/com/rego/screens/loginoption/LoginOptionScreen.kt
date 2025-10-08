@@ -1,4 +1,4 @@
-package com.rego.screens.loginoption
+package com.example.nativeandroidbasearchitecture.screens.loginoption
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,15 +27,27 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.rego.R
-import com.rego.screens.base.DefaultScreenUI
-import com.rego.screens.components.RegoButton
+import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
+import com.example.nativeandroidbasearchitecture.screens.components.RegoButton
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 
 @Composable
-fun LoginOptionScreen(onLogin: () -> Unit, onSignUp: () -> Unit) {
+fun LoginOptionScreen(
+    onLogin: () -> Unit,
+    onSignUp: () -> Unit,
+    onTermsClicked: () -> Unit = {},
+    onPrivacyClicked: () -> Unit = {}
+) {
     val loginViewModel: LoginOptionViewModel = koinViewModel()
     val errors = loginViewModel.errors
     val state = loginViewModel.state.collectAsState()
@@ -123,15 +135,42 @@ fun LoginOptionScreen(onLogin: () -> Unit, onSignUp: () -> Unit) {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 // Terms and Privacy Policy text
+                val context = LocalContext.current
                 val agreementText = buildAnnotatedString {
                     append("by continuing, you agree to our app's ")
-                    val startTerms = length
-                    append("Terms of Service")
-                    addStyle(SpanStyle(fontWeight = FontWeight.Bold), startTerms, length)
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "TERMS",
+                            styles = TextLinkStyles(style = SpanStyle(fontWeight = FontWeight.Bold)),
+                            linkInteractionListener = { _ ->
+                                Toast.makeText(
+                                    context,
+                                    "Terms of Service clicked",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                onTermsClicked()
+                            }
+                        )
+                    ) {
+                        append("Terms of Service")
+                    }
                     append("\nand acknowledge that you've read our ")
-                    val startPrivacy = length
-                    append("Privacy Policy")
-                    addStyle(SpanStyle(fontWeight = FontWeight.Bold), startPrivacy, length)
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "PRIVACY",
+                            styles = TextLinkStyles(style = SpanStyle(fontWeight = FontWeight.Bold)),
+                            linkInteractionListener = { _ ->
+                                Toast.makeText(
+                                    context,
+                                    "Privacy Policy clicked",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                onPrivacyClicked()
+                            }
+                        )
+                    ) {
+                        append("Privacy Policy")
+                    }
                     append(".")
                 }
                 Text(
@@ -143,5 +182,13 @@ fun LoginOptionScreen(onLogin: () -> Unit, onSignUp: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    NativeAndroidBaseArchitectureTheme {
+        LoginOptionScreen(onLogin = {}, onSignUp = {}, onTermsClicked = {}, onPrivacyClicked = {})
     }
 }

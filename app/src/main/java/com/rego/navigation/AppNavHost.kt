@@ -75,6 +75,9 @@ fun AppNavHost() {
                 onOrderClick = {
                     navController.navigate(Destinations.OrderDetails.route)
                 },
+                onSearchClick = {
+                    // Open search screen
+                },
                 onOrderListClick = {
                     navController.navigate(Destinations.OrdersList.createRoute(it))
                 },

@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.androidx.ui.text)
     implementation(libs.kotlinx.serialization.json)
 
     val ktorVersion = "3.3.0"

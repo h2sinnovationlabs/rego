@@ -1,5 +1,6 @@
-package com.rego.screens.main.home
+package com.example.nativeandroidbasearchitecture.screens.main.home
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,23 +39,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.rego.R
-import com.rego.screens.base.DefaultScreenUI
-import com.rego.screens.components.OrderCard
-import com.rego.ui.theme.Color00954D
-import com.rego.ui.theme.Color1A1A1A_16
-import com.rego.ui.theme.Color1A1A1A_40
-import com.rego.ui.theme.Color1A1A1A_60
-import com.rego.ui.theme.Color1A1A1A_90
-import com.rego.ui.theme.fontLightPoppins
-import com.rego.ui.theme.fontMediumPoppins
-import com.rego.ui.theme.fontSemiBoldPoppins
+import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
+import com.example.nativeandroidbasearchitecture.screens.components.OrderCard
+import com.example.nativeandroidbasearchitecture.ui.theme.Color00954D
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_16
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_40
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
+import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
+import com.example.nativeandroidbasearchitecture.ui.theme.fontLightPoppins
+import com.example.nativeandroidbasearchitecture.ui.theme.fontMediumPoppins
+import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -63,6 +66,7 @@ fun HomeScreen(
     onRaiseRequest: () -> Unit,
     onGridOptionClick: () -> Unit,
     onOrderClick: () -> Unit,
+    onSearchClick: () -> Unit,
     onOrderListClick: (String) -> Unit = {},
     onNotificationClick: () -> Unit = {},
 ) {
@@ -88,7 +92,8 @@ fun HomeScreen(
                 onGridOptionClick = onGridOptionClick,
                 onOrderClick = onOrderClick,
                 onOrderListClick = onOrderListClick,
-                onNotificationClick = onNotificationClick
+                onNotificationClick = onNotificationClick,
+                onSearchClick = onSearchClick
             )
         }
         BottomNavBar(
@@ -111,8 +116,9 @@ fun HomeScreenContent(
     onRaiseRequest: () -> Unit,
     onGridOptionClick: () -> Unit,
     onOrderClick: () -> Unit,
+    onSearchClick: () -> Unit,
     onOrderListClick: (String) -> Unit = {},
-    onNotificationClick: () -> Unit = {}
+    onNotificationClick: () -> Unit = {},
 ) {
     // --- Constants, sample data, utility colors/typography (replace with Type.kt, Color.kt as needed) ---
     // These imports expected for the below code:
@@ -164,6 +170,7 @@ fun HomeScreenContent(
                 .fillMaxSize()
                 .background(Color.Transparent)
         ) {
+            val context = LocalContext.current
             Spacer(modifier = Modifier.height(16.dp))
             // SEARCH BAR
             Box(
@@ -171,7 +178,15 @@ fun HomeScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp)
                     .background(Color.White, RoundedCornerShape(10.dp))
-                    .height(48.dp),
+                    .height(48.dp)
+                    .clickable {
+                        Toast.makeText(
+                            context,
+                            "Search bar clicked",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onSearchClick()
+                    },
                 contentAlignment = Alignment.CenterStart
             ) {
                 Row(
@@ -517,7 +532,7 @@ fun BottomNavBar(
     onHomeClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(modifier = modifier.shadow(8.dp), containerColor = Color.White) {
         NavigationBarItem(
             selected = isHomeSelected,
             onClick = {
@@ -528,10 +543,13 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.home),
-                    contentDescription = "Home"
+                    contentDescription = "Home",
+                    tint = if (isHomeSelected) Color00954D else Color94A3B8
                 )
             },
-            label = { Text("Home") })
+            label = { Text("Home", color = if (isHomeSelected) Color00954D else Color94A3B8) },
+            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
+        )
         NavigationBarItem(
             selected = isProfileSelected,
             onClick = {
@@ -542,10 +560,13 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.person),
-                    contentDescription = "Profile",
+                    contentDescription = "Account",
+                    tint = if (isHomeSelected) Color94A3B8 else Color00954D
                 )
             },
-            label = { Text("Profile") })
+            label = { Text("Account", color = if (isHomeSelected) Color94A3B8 else Color00954D) },
+            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
+        )
     }
 }
 

@@ -55,6 +55,7 @@ fun DefaultScreenUI(
             .fillMaxSize(1f)
             .background(Color.White)
     ) {
+        val bottomPadding = if (isBottomBarInScreen) 80.dp else it.calculateBottomPadding()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,8 +68,8 @@ fun DefaultScreenUI(
                         onRefresh()
                     }
                 )
-                .padding(bottom = if (isBottomBarInScreen) 70.dp else 0.dp)
-                .background(Color.Transparent)
+                .padding(bottom = bottomPadding)
+                .background(Color.White)
         ) {
             Column(
                 modifier = Modifier.background(Color.Transparent),
