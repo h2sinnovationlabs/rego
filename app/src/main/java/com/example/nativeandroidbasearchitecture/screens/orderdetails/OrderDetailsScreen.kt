@@ -1,8 +1,10 @@
 package com.example.nativeandroidbasearchitecture.screens.orderdetails
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,10 +36,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nativeandroidbasearchitecture.R
+import com.example.nativeandroidbasearchitecture.screens.base.DefaultScreenUI
 import com.example.nativeandroidbasearchitecture.screens.components.DashedDivider
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_60
 import com.example.nativeandroidbasearchitecture.ui.theme.Color1A1A1A_90
 import com.example.nativeandroidbasearchitecture.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldMontserrat
 import com.example.nativeandroidbasearchitecture.ui.theme.fontSemiBoldPoppins
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,39 +57,48 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
     }
     val details = state.selectedOrderDetails
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.shadow(elevation = 4.dp),
-                title = {
-                    Text(
-                        text = "Order details",
-                        style = fontSemiBoldPoppins().copy(
-                            fontSize = 16.sp,
-                            color = Color1A1A1A_90()
-                        )
-                    )
-                },
-                navigationIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.back),
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .clickable {
-                                onBack()
-                            }
-                    )
-                }
+    DefaultScreenUI(progressBarState = state.progressBarState) { paddingValues ->
+        Spacer(modifier = Modifier.size(paddingValues.calculateTopPadding()))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = 20.dp,
+                    start = 14.dp,
+                    bottom = 14.dp,
+                    end = 14.dp
+                )
+                .background(Color.White),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.back),
+                contentDescription = "Back",
+                tint = Color1A1A1A_90(),
+                modifier = Modifier
+                    .size(22.dp)
+                    .clickable { onBack() }
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = "Order details",
+                style = fontSemiBoldMontserrat().copy(fontSize = 16.sp),
+                color = Color1A1A1A_90(),
             )
         }
-    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White.copy(alpha = 0.5f))
+                .height(2.dp)
+                .shadow(1.dp)
+        )
+        Spacer(modifier = Modifier.size(18.dp))
         if (details == null) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-                    .padding(innerPadding),
+                    .padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -98,7 +109,6 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp)
-                    .padding(innerPadding)
             ) {
                 Spacer(Modifier.height(18.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -158,6 +168,7 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
+
     }
 }
 
