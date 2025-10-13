@@ -69,8 +69,7 @@ fun RaiseRequestParentScreen(
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "Raise a Request",
-                style = fontSemiBoldMontserrat().copy(fontSize = 16.sp),
-                color = Color1A1A1A_90(),
+                style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color1A1A1A_90()),
             )
         }
         HorizontalPager(

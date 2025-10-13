@@ -41,6 +41,7 @@ import com.rego.screens.components.DashedDivider
 import com.rego.ui.theme.Color1A1A1A_60
 import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontSemiBoldGilroy
 import com.rego.ui.theme.fontSemiBoldMontserrat
 import com.rego.ui.theme.fontSemiBoldPoppins
 import org.koin.androidx.compose.koinViewModel
@@ -114,14 +115,14 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "Order ID: ",
-                        style = fontSemiBoldPoppins().copy(
+                        style = fontSemiBoldGilroy().copy(
                             fontSize = 12.sp,
                             color = Color.Black.copy(alpha = 0.6f)
                         )
                     )
                     Text(
                         text = details.orderId,
-                        style = fontSemiBoldPoppins().copy(
+                        style = fontSemiBoldGilroy().copy(
                             fontSize = 14.sp,
                             color = Color.Black.copy(alpha = 0.9f)
                         )
@@ -136,7 +137,7 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                 ) {
                     Text(
                         text = "Part Type:",
-                        style = fontSemiBoldPoppins().copy(
+                        style = fontSemiBoldMontserrat().copy(
                             fontSize = 14.sp,
                             color = Color1A1A1A_90()
                         )
@@ -150,7 +151,7 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                     Spacer(Modifier.width(6.dp))
                     Text(
                         text = details.partType,
-                        style = fontSemiBoldPoppins().copy(
+                        style = fontSemiBoldMontserrat().copy(
                             fontSize = 12.sp,
                             color = Color1A1A1A_90()
                         )
@@ -159,7 +160,7 @@ fun OrderDetailsScreen(orderId: String, onBack: () -> Unit) {
                 Spacer(Modifier.height(16.dp))
                 Text(
                     text = "Part Photos:",
-                    style = fontSemiBoldPoppins().copy(fontSize = 14.sp, color = Color1A1A1A_90())
+                    style = fontSemiBoldMontserrat().copy(fontSize = 14.sp, color = Color1A1A1A_90())
                 )
                 Spacer(Modifier.height(8.dp))
                 PartPhotoGrid(images = details.partPhotos)
@@ -213,11 +214,11 @@ fun TwoColumnLabelRow(
     ) {
         Text(
             text = label1,
-            style = fontSemiBoldPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_60())
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60())
         )
         Text(
             text = label2,
-            style = fontSemiBoldPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_60())
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60())
         )
     }
 }

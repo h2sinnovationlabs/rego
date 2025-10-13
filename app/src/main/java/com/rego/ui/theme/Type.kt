@@ -129,6 +129,15 @@ fun fontSemiBoldMontserrat() = TextStyle(
 )
 
 @Composable
+fun fontSemiBoldInter() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_semi_bold,
+        )
+    ),
+)
+
+@Composable
 fun fontBoldMontserrat() = TextStyle(
     fontFamily = FontFamily(
         Font(
@@ -142,6 +151,15 @@ fun fontExtraBoldMontserrat() = TextStyle(
     fontFamily = FontFamily(
         Font(
             resId = R.font.montserrat_extra_bold,
+        )
+    ),
+)
+
+@Composable
+fun fontSemiBoldGilroy() = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            resId = R.font.montserrat_semi_bold,
         )
     ),
 )

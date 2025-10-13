@@ -433,8 +433,7 @@ fun PasswordTransparentInputField(
                             if (value.isEmpty()) {
                                 Text(
                                     text = placeholder,
-                                    color = Color1A1A1A_40(),
-                                    fontSize = 14.sp
+                                    style = fontSemiBoldMontserrat().copy(fontSize = 14.sp, color = Color1A1A1A_40()),
                                 )
                             }
                             innerTextField()

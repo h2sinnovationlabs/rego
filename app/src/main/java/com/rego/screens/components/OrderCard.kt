@@ -35,6 +35,8 @@ import com.rego.ui.theme.Color1A1A1A_60
 import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.fontBoldPoppins
 import com.rego.ui.theme.fontMediumPoppins
+import com.rego.ui.theme.fontSemiBoldGilroy
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import com.rego.ui.theme.fontSemiBoldPoppins
 
 data class OrderData(
@@ -73,12 +75,12 @@ fun OrderCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Order ID",
-                        style = fontMediumPoppins().copy(fontSize = 12.sp),
+                        style = fontSemiBoldGilroy().copy(fontSize = 12.sp),
                         color = Color1A1A1A_60()
                     )
                     Text(
                         text = order.orderId,
-                        style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                        style = fontSemiBoldGilroy().copy(fontSize = 14.sp),
                         color = Color.Black.copy(alpha = 0.87f)
                     )
                 }
@@ -104,26 +106,26 @@ fun OrderCard(
                     Column {
                         Text(
                             text = "Car Make",
-                            style = fontMediumPoppins().copy(fontSize = 12.sp),
+                            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                             color = Color1A1A1A_60()
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = order.carMake,
-                            style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                            style = fontSemiBoldGilroy().copy(fontSize = 14.sp),
                             color = Color.Black.copy(alpha = 0.87f)
                         )
                     }
                     Column {
                         Text(
                             text = "Target Delivery Date",
-                            style = fontMediumPoppins().copy(fontSize = 12.sp),
+                            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                             color = Color1A1A1A_60()
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = order.deliveryDate,
-                            style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                            style = fontSemiBoldGilroy().copy(fontSize = 14.sp),
                             color = Color.Black.copy(alpha = 0.87f)
                         )
                     }
@@ -139,26 +141,26 @@ fun OrderCard(
                         Column {
                             Text(
                                 text = "Dealer Name",
-                                style = fontMediumPoppins().copy(fontSize = 12.sp),
+                                style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                                 color = Color1A1A1A_60()
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = order.dealerName ?: "N/A",
-                                style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                                style = fontSemiBoldGilroy().copy(fontSize = 14.sp),
                                 color = Color.Black.copy(alpha = 0.87f)
                             )
                         }
                         Column {
                             Text(
                                 text = "Dealer Location",
-                                style = fontMediumPoppins().copy(fontSize = 12.sp),
+                                style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                                 color = Color1A1A1A_60()
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = order.dealerLocation ?: "N/A",
-                                style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                                style = fontSemiBoldGilroy().copy(fontSize = 14.sp),
                                 color = Color.Black.copy(alpha = 0.87f)
                             )
                         }
@@ -167,7 +169,7 @@ fun OrderCard(
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         text = "Part Photos:",
-                        style = fontSemiBoldPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_90())
+                        style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_90())
                     )
                     Spacer(Modifier.height(8.dp))
                     Row(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -198,7 +200,7 @@ fun OrderCard(
                 ) {
                     Text(
                         text = if (isExpanded) "View Less" else "View More",
-                        style = fontSemiBoldPoppins().copy(fontSize = 12.sp),
+                        style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                         color = Color(0xFF00954D)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -227,7 +229,7 @@ fun OrderCard(
                 ) {
                     Text(
                         text = "View Order >>",
-                        style = fontSemiBoldPoppins().copy(fontSize = 12.sp),
+                        style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                         color = Color00954D
                     )
                 }
@@ -253,7 +255,7 @@ fun StatusBadge(status: String) {
     ) {
         Text(
             text = status,
-            style = fontBoldPoppins().copy(fontSize = 10.sp),
+            style = fontSemiBoldMontserrat().copy(fontSize = 10.sp),
             color = getTextColorForStatus(status)
         )
     }

@@ -55,6 +55,8 @@ import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.Color94A3B8
 import com.rego.ui.theme.fontLightPoppins
 import com.rego.ui.theme.fontMediumPoppins
+import com.rego.ui.theme.fontSemiBoldInter
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import com.rego.ui.theme.fontSemiBoldPoppins
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -169,8 +171,10 @@ fun HomeScreenContent(
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = "Search claim number etc",
-                        style = fontMediumPoppins().copy(fontSize = 12.sp),
-                        color = Color1A1A1A_40()
+                        style = fontSemiBoldMontserrat().copy(
+                            fontSize = 12.sp,
+                            color = Color1A1A1A_40()
+                        ),
                     )
                 }
             }
@@ -213,12 +217,12 @@ fun HomeScreenContent(
                     ) {
                         Text(
                             text = "Raise a request",
-                            style = fontSemiBoldPoppins().copy(fontSize = 14.sp),
+                            style = fontSemiBoldMontserrat().copy(fontSize = 14.sp),
                             color = Color1A1A1A_90()
                         )
                         Text(
                             text = "Send request to REGO CRs for part repairs",
-                            style = fontMediumPoppins().copy(fontSize = 10.sp),
+                            style = fontSemiBoldMontserrat().copy(fontSize = 10.sp),
                             color = Color1A1A1A_60()
                         )
                     }
@@ -321,26 +325,26 @@ fun HomeScreenContent(
                         ) {
                             Text(
                                 text = "Ongoing Orders",
-                                style = fontSemiBoldPoppins().copy(fontSize = 16.sp),
+                                style = fontSemiBoldMontserrat().copy(fontSize = 16.sp),
                                 color = Color(0xE61A1A1A)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "(${ongoingOrders?.size})",
-                                style = fontMediumPoppins().copy(fontSize = 15.sp),
+                                text = "(${ongoingOrders.size})",
+                                style = fontSemiBoldMontserrat().copy(fontSize = 15.sp),
                                 color = Color(0xFFFF514F)
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = "View All",
-                                style = fontMediumPoppins().copy(fontSize = 12.sp),
+                                style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                                 color = Color(0xFF00954D),
                                 modifier = Modifier.clickable { onOrderListClick("Ongoing Orders") }
                             )
                         }
                         Text(
                             text = "Manage all your order in one go.",
-                            style = fontLightPoppins().copy(fontSize = 12.sp),
+                            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                             color = Color(0x991A1A1A),
                             modifier = Modifier
                                 .padding(vertical = 6.dp)
@@ -376,7 +380,7 @@ fun HomeScreenContent(
                                 ) {
                                     Text(
                                         text = filter,
-                                        style = fontMediumPoppins().copy(fontSize = 10.sp),
+                                        style = fontSemiBoldMontserrat().copy(fontSize = 10.sp),
                                         color = if (selected) Color.White else Color1A1A1A_60(),
                                         modifier = Modifier.padding(
                                             horizontal = 13.dp,
@@ -439,7 +443,7 @@ fun SummaryCard(
             ) {
                 Text(
                     text = label,
-                    style = fontMediumPoppins().copy(fontSize = 12.sp),
+                    style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                     color = Color1A1A1A_60()
                 )
                 Image(
@@ -458,7 +462,7 @@ fun SummaryCard(
             ) {
                 Text(
                     text = "$value",
-                    style = fontSemiBoldPoppins().copy(fontSize = 24.sp),
+                    style = fontSemiBoldMontserrat().copy(fontSize = 24.sp),
                     color = Color.Black
                 )
                 Spacer(Modifier.width(14.dp))
@@ -534,7 +538,10 @@ fun BottomNavBar(
             label = {
                 Text(
                     "Profile",
-                    color = if (isProfileSelected) Color00954D else Color94A3B8
+                    style = fontSemiBoldInter().copy(
+                        color = if (isProfileSelected) Color00954D else Color94A3B8,
+                        fontSize = 10.sp
+                    )
                 )
             })
     }
@@ -589,7 +596,7 @@ fun TopBarSection(paddingValues: PaddingValues, onNotificationClick: () -> Unit)
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Welcome Ayush,",
-                    style = fontSemiBoldPoppins().copy(fontSize = 16.sp),
+                    style = fontSemiBoldMontserrat().copy(fontSize = 16.sp),
                     color = Color.White
                 )
             }

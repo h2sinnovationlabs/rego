@@ -44,7 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rego.ui.theme.Color00954D
 import com.rego.ui.theme.Color1A1A1A
+import com.rego.ui.theme.Color1A1A1A_80
+import com.rego.ui.theme.Color1A1A1A_87
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontMediumMontserrat
+import com.rego.ui.theme.fontMediumPoppins
 
 @Composable
 fun OtpView(
@@ -233,10 +237,10 @@ fun OtpInputViewType2(
                         }
                     ),
                     singleLine = true,
-                    textStyle = TextStyle(
+                    textStyle = fontMediumPoppins().copy(
+                        color = Color1A1A1A_80(),
                         fontSize = 16.sp,
-                        color = Color1A1A1A.copy(alpha = 0.8f),
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     ),
                     modifier = Modifier
                         .padding(top = 2.dp)

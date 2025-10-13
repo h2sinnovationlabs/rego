@@ -55,6 +55,7 @@ import com.rego.ui.theme.Color1A1A1A_40
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
 import com.rego.ui.theme.fontBoldPoppins
 import com.rego.ui.theme.fontMediumPoppins
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import com.rego.ui.theme.fontSemiBoldPoppins
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -97,7 +98,7 @@ fun OrderListScreen(
                 title = {
                     Text(
                         text = orderType,
-                        style = fontSemiBoldPoppins().copy(fontSize = 16.sp, color = Color.White)
+                        style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color.White)
                     )
                 },
                 navigationIcon = {
@@ -186,7 +187,7 @@ fun OrderListScreen(
                                     text = partType.name,
                                     style = if (pagerState.currentPage == index) fontBoldPoppins().copy(
                                         color = Color.White
-                                    ) else fontSemiBoldPoppins().copy(color = Color.White.copy(alpha = 0.8f)),
+                                    ) else fontSemiBoldMontserrat().copy(color = Color.White.copy(alpha = 0.8f)),
                                     textAlign = TextAlign.Center,
                                     fontSize = 10.sp
                                 )
@@ -223,7 +224,7 @@ fun OrderListScreen(
                             end = 4.dp
                         ),
                         text = "Filter",
-                        style = fontMediumPoppins().copy(fontSize = 12.sp),
+                        style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                         color = Color.Black
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -257,7 +258,7 @@ fun OrderListScreen(
                             end = 4.dp
                         ),
                         text = "Sort by",
-                        style = fontMediumPoppins().copy(fontSize = 12.sp),
+                        style = fontSemiBoldMontserrat().copy(fontSize = 12.sp),
                         color = Color.Black
                     )
                     Spacer(modifier = Modifier.width(4.dp))

@@ -52,7 +52,14 @@ import com.rego.screens.components.OtpInputViewType2
 import com.rego.screens.components.RegoButton
 import com.rego.ui.theme.Color00954D
 import com.rego.ui.theme.Color1A1A1A
+import com.rego.ui.theme.Color1A1A1A_40
+import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.Color1A1A1A_87
+import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontBoldPoppins
+import com.rego.ui.theme.fontMediumMontserrat
+import com.rego.ui.theme.fontSemiBoldPoppins
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +88,7 @@ fun MobileVerificationScreen(
             is MobileVerificationAction.NavigateToHome -> {
                 onVerificationComplete()
             }
+
             is MobileVerificationAction.ShowOtpExpiredDialog -> {
                 // Handle OTP expired if needed
             }
@@ -210,9 +218,7 @@ private fun MobileNumberInputScreen(
 
         Text(
             text = "Welcome",
-            color = Color00954D,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            style = fontBoldPoppins().copy(color = Color00954D, fontSize = 24.sp),
             textAlign = TextAlign.Center
         )
 
@@ -220,8 +226,10 @@ private fun MobileNumberInputScreen(
 
         Text(
             text = "Enter your phone number to continue",
-            color = Color1A1A1A.copy(alpha = 0.87f),
-            fontSize = 16.sp,
+            style = fontMediumMontserrat().copy(
+                color = Color1A1A1A.copy(alpha = 0.87f),
+                fontSize = 16.sp
+            ),
             textAlign = TextAlign.Center
         )
 
@@ -242,8 +250,10 @@ private fun MobileNumberInputScreen(
         ) {
             Text(
                 text = "+91  |",
-                fontSize = 14.sp,
-                color = Color1A1A1A.copy(alpha = 0.87f),
+                style = fontMediumMontserrat().copy(
+                    color = Color1A1A1A.copy(alpha = 0.87f),
+                    fontSize = 14.sp,
+                ),
                 modifier = Modifier.background(Color.Transparent),
             )
 
@@ -261,7 +271,10 @@ private fun MobileNumberInputScreen(
                 placeholder = {
                     Text(
                         "Enter Mobile Number",
-                        color = Color1A1A1A.copy(alpha = 0.4f)
+                        style = fontMediumMontserrat().copy(
+                            color = Color1A1A1A_40(),
+                            fontSize = 14.sp,
+                        ),
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -272,7 +285,10 @@ private fun MobileNumberInputScreen(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(color = Color1A1A1A.copy(alpha = 0.9f)),
+                textStyle = fontMediumMontserrat().copy(
+                    color = Color1A1A1A_90(),
+                    fontSize = 14.sp,
+                ),
                 enabled = !isLoading
             )
         }
@@ -292,9 +308,11 @@ private fun MobileNumberInputScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "You will receive a 6-digit OTP on this number",
-            color = Color1A1A1A.copy(alpha = 0.6f),
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            style = fontMediumMontserrat().copy(
+                color = Color1A1A1A_60(),
+                fontSize = 12.sp,
+            ),
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -354,9 +372,10 @@ private fun OtpVerificationScreen(
 
         Text(
             text = "Verification Code",
-            color = Color00954D,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            style = fontSemiBoldPoppins().copy(
+                color = Color00954D,
+                fontSize = 24.sp,
+            ),
             textAlign = TextAlign.Center
         )
 
@@ -364,20 +383,22 @@ private fun OtpVerificationScreen(
 
         Text(
             text = "Please enter the verification code sent to",
-            color = Color1A1A1A.copy(alpha = 0.6f),
-            fontSize = 16.sp,
+            style = fontMediumMontserrat().copy(
+                color = Color1A1A1A_60(),
+                fontSize = 16.sp,
+            ),
             textAlign = TextAlign.Center,
-            lineHeight = 20.sp
         )
 
         Spacer(modifier = Modifier.height(1.dp))
 
         Text(
             text = "+91$mobileNumber",
-            color = Color1A1A1A.copy(alpha = 0.87f),
-            fontSize = 16.sp,
+            style = fontMediumMontserrat().copy(
+                color = Color1A1A1A_87(),
+                fontSize = 16.sp,
+            ),
             textAlign = TextAlign.Center,
-            lineHeight = 20.sp
         )
 
         // Show backend message if available
@@ -433,15 +454,19 @@ private fun OtpVerificationScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = "Resend Code",
-                        color = Color00954D,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        style = fontMediumMontserrat().copy(
+                            color = Color00954D,
+                            fontSize = 16.sp,
+                        ),
                     )
                     if (resendCount > 0) {
                         Text(
                             text = "Resent $resendCount time${if (resendCount > 1) "s" else ""}",
-                            color = Color.Gray,
-                            fontSize = 12.sp
+                            style = fontMediumMontserrat().copy(
+                                color = Color.Gray,
+                                fontSize = 12.sp,
+                            ),
                         )
                     }
                 }
@@ -449,8 +474,10 @@ private fun OtpVerificationScreen(
         } else if (!isLoading) {
             Text(
                 text = "Resend code in 0:${String.format("%02d", resendTimer)}",
-                color = Color1A1A1A.copy(alpha = 0.87f),
-                fontSize = 14.sp
+                style = fontMediumMontserrat().copy(
+                    color = Color1A1A1A_87(),
+                    fontSize = 14.sp,
+                ),
             )
         }
 

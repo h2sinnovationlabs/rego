@@ -64,12 +64,14 @@ import com.rego.screens.components.RegoButton
 import com.rego.screens.components.TransparentInputField
 import com.rego.ui.theme.Color00954D
 import com.rego.ui.theme.Color1A1A1A_60
+import com.rego.ui.theme.Color1A1A1A_80
 import com.rego.ui.theme.Color1A1A1A_87
 import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.ColorF9F9F9
 import com.rego.ui.theme.ColorFBFBFB
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
 import com.rego.ui.theme.fontMediumMontserrat
+import com.rego.ui.theme.fontSemiBoldMontserrat
 import org.koin.androidx.compose.koinViewModel
 
 data class PartType(
@@ -206,15 +208,11 @@ fun RaiseRequestScreenContent(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = "Part type",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_90()
+            style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color1A1A1A_90()),
         )
         Text(
             text = "Choose part for repair",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_60(),
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60()),
             modifier = Modifier.padding(top = 4.dp)
         )
 
@@ -235,15 +233,11 @@ fun RaiseRequestScreenContent(
 
         Text(
             text = "Part photos",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_90()
+            style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color1A1A1A_90()),
         )
         Text(
             text = "Upload photos of the part",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_60(),
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60()),
             modifier = Modifier.padding(top = 4.dp)
         )
 
@@ -296,7 +290,7 @@ fun RaiseRequestScreenContent(
                             modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Add Photo", fontSize = 10.sp, color = Color(0xFF4CAF50))
+                        Text("Add Photo", style = fontSemiBoldMontserrat().copy(fontSize = 10.sp, color = Color00954D),)
                     }
                 }
             }
@@ -349,15 +343,12 @@ fun RaiseRequestScreenContent(
 
         Text(
             text = "Other Details",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_90(),
+            style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color1A1A1A_90()),
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
             text = "Fill other details",
-            fontSize = 12.sp,
-            color = Color1A1A1A_60(),
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60()),
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
@@ -634,10 +625,8 @@ fun PartTypeCard(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                color = Color1A1A1A_87()
+                style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_80()),
             )
         }
     }

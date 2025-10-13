@@ -27,6 +27,7 @@ import com.rego.screens.components.RegoButton
 import com.rego.ui.theme.Color1A1A1A
 import com.rego.ui.theme.Color1A1A1A_60
 import com.rego.ui.theme.NativeAndroidBaseArchitectureTheme
+import com.rego.ui.theme.fontSemiBoldMontserrat
 
 @Composable
 fun RequestSubmittedScreen(
@@ -62,9 +63,7 @@ fun RequestSubmittedScreen(
         // Title
         Text(
             text = "Request Submitted",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A,
+            style = fontSemiBoldMontserrat().copy(fontSize = 16.sp, color = Color1A1A1A),
             textAlign = TextAlign.Center
         )
 
@@ -73,9 +72,7 @@ fun RequestSubmittedScreen(
         // Description
         Text(
             text = "Thank you for your request. Kindly await approval or disapproval from REGO CR",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color1A1A1A_60(),
+            style = fontSemiBoldMontserrat().copy(fontSize = 12.sp, color = Color1A1A1A_60()),
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
             modifier = Modifier.padding(horizontal = 24.dp)

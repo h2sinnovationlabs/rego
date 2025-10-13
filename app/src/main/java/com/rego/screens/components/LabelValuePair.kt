@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.rego.ui.theme.Color1A1A1A_60
 import com.rego.ui.theme.Color1A1A1A_90
 import com.rego.ui.theme.fontMediumPoppins
+import com.rego.ui.theme.fontSemiBoldInter
 
 @Composable
 fun LabelValuePair(
@@ -31,13 +32,13 @@ fun LabelValuePair(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = label,
-                style = fontMediumPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_60())
+                style = fontSemiBoldInter().copy(fontSize = 12.sp, color = Color1A1A1A_60())
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = value,
-                    style = fontMediumPoppins().copy(fontSize = 12.sp, color = Color1A1A1A_90())
+                    style = fontSemiBoldInter().copy(fontSize = 12.sp, color = Color1A1A1A_90())
                 )
                 if (trailing != null) {
                     Spacer(modifier = Modifier.padding(start = 6.dp))
