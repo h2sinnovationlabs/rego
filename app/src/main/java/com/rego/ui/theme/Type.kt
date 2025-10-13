@@ -159,7 +159,7 @@ fun fontExtraBoldMontserrat() = TextStyle(
 fun fontSemiBoldGilroy() = TextStyle(
     fontFamily = FontFamily(
         Font(
-            resId = R.font.montserrat_semi_bold,
+            resId = R.font.gilroy_semi_bold,
         )
     ),
 )
